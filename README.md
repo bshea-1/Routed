@@ -331,7 +331,7 @@ Routed stores its index and database files in standard platform directories:
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/bshea-1/routed/star-history/assets/star-history.svg" alt="Routed Star History" width="800">
+<img src="assets/star-history.svg" alt="Routed Star History" width="800">
 
 </div>
 

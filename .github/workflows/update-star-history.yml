@@ -26,12 +26,14 @@ jobs:
           ROUTED_REPO: ${{ github.repository }}
         run: node scripts/generate-star-history.mjs
 
-      - name: Push to Star History Branch
+      - name: Commit and Push Changes
         run: |
           git config --local user.email "202353692+bshea-1@users.noreply.github.com"
           git config --local user.name "bshea-1"
-          git checkout --orphan star-history
-          git reset
           git add assets/star-history.svg
-          git commit -m "update star history chart"
-          git push --force origin star-history
+          if git diff --staged --quiet; then
+            echo "Star history chart is already up to date."
+          else
+            git commit -m "docs: update star history chart [skip ci]"
+            git push origin main
+          fi
