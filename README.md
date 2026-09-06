@@ -4,19 +4,21 @@
 
 **The Universal Local Router for Agent Skills**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT) [![Latest Release](https://img.shields.io/badge/Release-v1.2.0-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20Routed%20Online-blue?style=for-the-badge&logo=vercel)](https://routed-demo.vercel.app/) [![Latest Release](https://img.shields.io/badge/Release-v1.3.0-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation) [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 </div>
 
 <div align="center" class="quick-nav">
 
-[Overview](#overview) | [Architecture](#architecture) | [Installation](#installation) | [Quick Start](#quick-start) | [Comparison](#comparison) | [Environments](#supported-environments) | [MCP & Local Models](#model-context-protocol-mcp--local-models) | [CLI](#cli-reference) | [FAQ](#faq) | [Star History](#star-history) | [License](#license)
+[Live Demo](https://routed-demo.vercel.app/) | [Overview](#overview) | [Architecture](#architecture) | [Installation](#installation) | [Quick Start](#quick-start) | [Comparison](#comparison) | [Environments](#supported-environments) | [MCP & Local Models](#model-context-protocol-mcp--local-models) | [CLI](#cli-reference) | [FAQ](#faq) | [Star History](#star-history) | [License](#license)
 
 </div><br>
 
 <div align="center">
 
-<img src="assets/demo.gif" alt="Routed Terminal Demo" width="880">
+<a href="https://routed-demo.vercel.app/">
+  <img src="assets/demo.gif" alt="Routed Terminal Demo - Click to Open Live Web Demo" width="880">
+</a>
 
 </div><br>
 
@@ -54,9 +56,9 @@ flowchart LR
 
     subgraph Engine["Hybrid Scoring Pipeline (Local CPU)"]
         Exact["Exact / Alias Match (10%)"]
-        BM25["Okapi BM25 Lexical (25%)"]
-        Semantic["Dense Vector Embeddings (60%)"]
-        Meta["Metadata & Recency (5%)"]
+        BM25["Okapi BM25 Lexical (35%)"]
+        Semantic["Dense Vector Embeddings (50%)"]
+        Meta["Adaptive History & Decay (5-25%)"]
     end
 
     Exact --> Scorer["Composite Hybrid Scorer"]
@@ -68,7 +70,7 @@ flowchart LR
     Selection --> Agent["AI Host Agent (Antigravity / Claude / Cursor / OpenCode / Codex)"]
 ```
 
-$$\text{Composite Score} = 0.60 \cdot \text{Semantic} + 0.25 \cdot \text{BM25} + 0.10 \cdot \text{Exact} + 0.05 \cdot \text{Metadata}$$
+$$\text{Composite Score} = 0.50 \cdot \text{Semantic} + 0.35 \cdot \text{BM25} + 0.10 \cdot \text{Exact} + W_{\text{history}} \cdot \text{Metadata}$$
 
 ---
 
@@ -171,6 +173,7 @@ routed doctor
 | **Model Context Protocol (MCP)** | `claude_desktop_config.json`, `.cursor/mcp.json` | Supported | Universal JSON-RPC 2.0 stdio server (`routed mcp`) |
 | **LM Studio** | `~/.cache/lm-studio/mcp.json` | Supported | Local MCP server for GPU-hosted local LLMs |
 | **Ollama** | `~/.ollama/routed/routed-tools.json` | Supported | Tool schemas (`/api/chat`) and dynamic Modelfiles |
+| **Hermes Agent** | `~/.hermes/routed/routed-tools.json` | Supported | Function calling schemas (JSON & XML) and prompt integration (`routed hermes`) |
 | **Antigravity** | `~/.gemini/config/skills/route/SKILL.md` | Supported | Native skill dispatch and background router |
 | **Claude Code** | `~/.claude/skills/route/SKILL.md` | Supported | Slash command integration and terminal runner |
 | **Cursor** | `.cursor/rules/routed.mdc` / `mcp.json` | Supported | Rule-based prompt interception and MCP tools |
@@ -206,7 +209,25 @@ routed ollama tools
 
 Route a prompt and generate a ready-to-run Ollama API payload:
 ```bash
-routed ollama route "audit firestore security rules"
+routed ollama run --prompt "build a neural network in pytorch" --model llama3.2
+```
+
+### Hermes Agent Integration
+Generate tool schemas (OpenAI JSON or Nous Hermes XML) for Hermes agents:
+```bash
+# OpenAI-compatible JSON schema
+routed hermes schema
+
+# Nous Hermes XML schema
+routed hermes schema --xml
+
+# System prompt guidance snippet
+routed hermes prompt
+```
+
+Route a prompt and get ready-to-inject instructions:
+```bash
+routed hermes route "refactor auth service"
 ```
 
 ---
@@ -219,6 +240,7 @@ routed ollama route "audit firestore security rules"
 | `routed update` | Check for updates and upgrade Routed | `routed update --check` |
 | `routed mcp` | Start Model Context Protocol server over stdio | `routed mcp` |
 | `routed ollama <cmd>` | Ollama tool schemas, routes, and Modelfiles | `routed ollama tools` |
+| `routed hermes <cmd>` | Hermes schemas (JSON/XML), prompts, and routes | `routed hermes schema` |
 | `routed route "<prompt>"` | Find matching skill(s) for a prompt | `routed route "write unit test with TDD"` |
 | `routed scan` | Scan supported environments and update index | `routed scan` |
 | `routed skills` | List all discovered and indexed skills | `routed skills` |
@@ -243,6 +265,7 @@ Commands:
   update              Check for updates and automatically upgrade Routed (--check to inspect)
   mcp                 Start Model Context Protocol (MCP) server for LM Studio, Cursor, Claude
   ollama <subcommand> Ollama tool schemas, Modelfiles, and direct route integration
+  hermes <subcommand> Hermes agent schemas (JSON/XML), prompts, and direct route integration
   route "<prompt>"    Find the best matching Agent Skill(s) for a prompt
   scan                Scan supported AI environments and update index
   skills              List all discovered and indexed skills
@@ -308,9 +331,7 @@ Routed stores its index and database files in standard platform directories:
 
 <div align="center">
 
-[![Star History Chart](assets/star-history.svg)](https://github.com/bshea-1/Routed/stargazers)
-
-<p><em>Real-time stargazer history powered directly by the GitHub Stargazers History API.</em></p>
+<img src="https://raw.githubusercontent.com/bshea-1/Routed/star-history/assets/star-history.svg" alt="Routed Star History" width="800">
 
 </div>
 

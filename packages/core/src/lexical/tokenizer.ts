@@ -100,7 +100,7 @@ export function tokenize(text: string, options: {
             }
         }
 
-        if (expandSynonyms && TECHNICAL_SYNONYMS[token]) {
+        if (expandSynonyms && Array.isArray(TECHNICAL_SYNONYMS[token])) {
             for (const syn of TECHNICAL_SYNONYMS[token]) {
                 if (!tokens.includes(syn)) {
                     tokens.push(syn);

@@ -1,6 +1,6 @@
 export const DEFAULT_WEIGHTS = {
-    semanticWeight: 0.60,
-    lexicalWeight: 0.25,
+    semanticWeight: 0.50,
+    lexicalWeight: 0.35,
     exactWeight: 0.10,
     metadataWeight: 0.05,
 };
@@ -15,10 +15,16 @@ export class HybridScorer {
         };
     }
     computeScore(skill, components, options = {}) {
-        const sw = options.semanticWeight ?? this.config.semanticWeight;
+        let sw = options.semanticWeight ?? this.config.semanticWeight;
         const lw = options.lexicalWeight ?? this.config.lexicalWeight;
         const ew = options.exactWeight ?? this.config.exactWeight;
-        const mw = options.metadataWeight ?? this.config.metadataWeight;
+        let mw = options.metadataWeight ?? this.config.metadataWeight;
+        // If metadata/history weight is dynamically boosted beyond baseline 0.05 (up to 0.25),
+        // smoothly absorb the delta from semantic weight while keeping lexical and exact baselines steady.
+        if (mw > DEFAULT_WEIGHTS.metadataWeight) {
+            const extraMeta = mw - DEFAULT_WEIGHTS.metadataWeight;
+            sw = Math.max(0.20, sw - extraMeta);
+        }
         if (components.exactOrAlias >= 0.90) {
             const signals = {
                 exactMatch: components.exactOrAlias,

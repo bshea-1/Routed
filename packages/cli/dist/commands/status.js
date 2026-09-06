@@ -10,7 +10,7 @@ export function runStatus(options = {}) {
     const statusData = {
         router: 'Ready',
         semanticModel: semanticEngine.getModelName(),
-        engine: 'Hybrid Pipeline (Semantic 60% + BM25 25% + Exact 10% + Meta 5%)',
+        engine: 'Hybrid Pipeline (Semantic 50% + BM25 35% + Exact 10% + Adaptive History 5-25%)',
         skillsIndexed: skills.length,
         embeddingsComputed: embeddings.length,
         databasePath: paths.databasePath,

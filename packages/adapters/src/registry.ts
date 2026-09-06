@@ -8,6 +8,7 @@ import { CodexAdapter } from './hosts/codex.js';
 import { McpAdapter } from './hosts/mcp.js';
 import { LmStudioAdapter } from './hosts/lmstudio.js';
 import { OllamaAdapter } from './hosts/ollama.js';
+import { HermesAdapter } from './hosts/hermes.js';
 import { WindsurfAdapter } from './hosts/windsurf.js';
 import { ContinueAdapter } from './hosts/continue.js';
 export class AdapterRegistry {
@@ -25,6 +26,7 @@ export class AdapterRegistry {
             new McpAdapter(),
             new LmStudioAdapter(),
             new OllamaAdapter(),
+            new HermesAdapter(),
             new WindsurfAdapter(),
             new ContinueAdapter(),
         ];

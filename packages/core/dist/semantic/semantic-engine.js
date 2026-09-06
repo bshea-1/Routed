@@ -107,8 +107,13 @@ export class SemanticEngine {
     async search(query, skills, db) {
         const queryVector = await this.embed(query, true);
         const results = [];
+        const allEmbeddings = db.getAllEmbeddings();
+        const embMap = new Map();
+        for (const e of allEmbeddings) {
+            embMap.set(e.skillId, e);
+        }
         for (const skill of skills) {
-            let emb = db.getEmbedding(skill.id);
+            let emb = embMap.get(skill.id);
             if (!emb) {
                 const text = this.prepareSkillText(skill);
                 const vector = await this.embed(text, false);
@@ -120,6 +125,7 @@ export class SemanticEngine {
                     embeddedAt: Date.now(),
                 };
                 db.upsertEmbedding(emb);
+                embMap.set(skill.id, emb);
             }
             const sim = cosineSimilarity(queryVector, emb.vector, true);
             results.push({ skill, similarity: sim });

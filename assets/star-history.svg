@@ -62,7 +62,7 @@
   <!-- Total Stars Badge -->
   <g transform="translate(655, 20)">
     <rect width="110" height="26" class="badge-rect" />
-    <text x="55" y="17" text-anchor="middle" class="badge-text">7 Stars</text>
+    <text x="55" y="17" text-anchor="middle" class="badge-text">10 Stars</text>
   </g>
 
   <!-- Y Axis Grid and Ticks -->
@@ -71,20 +71,20 @@
         <text x="53" y="314.0" text-anchor="end" class="tick-label">0</text>
         
 
-        <line x1="65" y1="238.6" x2="765" y2="238.6" stroke="var(--grid-line)" stroke-dasharray="3,3" />
-        <text x="53" y="242.6" text-anchor="end" class="tick-label">2</text>
+        <line x1="65" y1="235.0" x2="765" y2="235.0" stroke="var(--grid-line)" stroke-dasharray="3,3" />
+        <text x="53" y="239.0" text-anchor="end" class="tick-label">3</text>
         
 
-        <line x1="65" y1="167.1" x2="765" y2="167.1" stroke="var(--grid-line)" stroke-dasharray="3,3" />
-        <text x="53" y="171.1" text-anchor="end" class="tick-label">4</text>
+        <line x1="65" y1="160.0" x2="765" y2="160.0" stroke="var(--grid-line)" stroke-dasharray="3,3" />
+        <text x="53" y="164.0" text-anchor="end" class="tick-label">6</text>
         
 
-        <line x1="65" y1="95.7" x2="765" y2="95.7" stroke="var(--grid-line)" stroke-dasharray="3,3" />
-        <text x="53" y="99.7" text-anchor="end" class="tick-label">6</text>
+        <line x1="65" y1="85.0" x2="765" y2="85.0" stroke="var(--grid-line)" stroke-dasharray="3,3" />
+        <text x="53" y="89.0" text-anchor="end" class="tick-label">9</text>
         
 
         <line x1="65" y1="60.0" x2="765" y2="60.0" stroke="var(--grid-line)" stroke-dasharray="3,3" />
-        <text x="53" y="64.0" text-anchor="end" class="tick-label">7</text>
+        <text x="53" y="64.0" text-anchor="end" class="tick-label">10</text>
         </g>
 
   <!-- X Axis and Ticks -->
@@ -112,10 +112,10 @@
         </g>
 
   <!-- Gradient Area Under Curve -->
-  <path d="M 65.0,310.0 L 152.5,202.9 L 240.0,60.0 L 327.5,60.0 L 415.0,60.0 L 502.5,60.0 L 590.0,60.0 L 677.5,60.0 L 765.0,60.0 L 765.0,310.0 L 65.0,310.0 Z" class="data-area" />
+  <path d="M 65.0,310.0 L 152.5,235.0 L 240.0,60.0 L 327.5,60.0 L 415.0,60.0 L 502.5,60.0 L 590.0,60.0 L 677.5,60.0 L 765.0,60.0 L 765.0,310.0 L 65.0,310.0 Z" class="data-area" />
 
   <!-- Plot Line -->
-  <path d="M 65.0,310.0 L 152.5,202.9 L 240.0,60.0 L 327.5,60.0 L 415.0,60.0 L 502.5,60.0 L 590.0,60.0 L 677.5,60.0 L 765.0,60.0" class="data-line" />
+  <path d="M 65.0,310.0 L 152.5,235.0 L 240.0,60.0 L 327.5,60.0 L 415.0,60.0 L 502.5,60.0 L 590.0,60.0 L 677.5,60.0 L 765.0,60.0" class="data-line" />
 
   <!-- Data Points -->
   <g>
@@ -123,8 +123,8 @@
         <circle cx="65.0" cy="310.0" r="2" class="data-dot-center" />
         
 
-        <circle cx="152.5" cy="202.9" r="4.5" class="data-dot" />
-        <circle cx="152.5" cy="202.9" r="2" class="data-dot-center" />
+        <circle cx="152.5" cy="235.0" r="4.5" class="data-dot" />
+        <circle cx="152.5" cy="235.0" r="2" class="data-dot-center" />
         
 
         <circle cx="240.0" cy="60.0" r="4.5" class="data-dot" />

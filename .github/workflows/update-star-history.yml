@@ -4,11 +4,6 @@ on:
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - 'scripts/generate-star-history.mjs'
 
 permissions:
   contents: write
@@ -31,14 +26,12 @@ jobs:
           ROUTED_REPO: ${{ github.repository }}
         run: node scripts/generate-star-history.mjs
 
-      - name: Commit and Push Changes
+      - name: Push to Star History Branch
         run: |
           git config --local user.email "202353692+bshea-1@users.noreply.github.com"
           git config --local user.name "bshea-1"
+          git checkout --orphan star-history
+          git reset
           git add assets/star-history.svg
-          if git diff --staged --quiet; then
-            echo "Star history chart is already up to date."
-          else
-            git commit -m "docs: update star history chart from github api"
-            git push origin main
-          fi
+          git commit -m "update star history chart"
+          git push --force origin star-history

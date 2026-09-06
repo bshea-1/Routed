@@ -12,8 +12,9 @@ import { runFeedbackCommand } from './commands/feedback.js';
 import { runSetupCommand } from './commands/setup.js';
 import { runMcpServer } from './commands/mcp.js';
 import { runOllamaCommand } from './commands/ollama.js';
+import { runHermesCommand } from './commands/hermes.js';
 import { runUpdateCommand } from './commands/update.js';
-export const VERSION = '1.2.0';
+export const VERSION = '1.3.0';
 export async function main(args) {
     const command = args[0];
     if (!command || command === 'help' || command === '--help' || command === '-h') {
@@ -171,6 +172,13 @@ export async function main(args) {
             await runOllamaCommand({ subcommand: sub, prompt, model });
             break;
         }
+        case 'hermes': {
+            const sub = args[1];
+            const prompt = args[2];
+            const format = args.includes('--xml') ? 'xml' : 'json';
+            await runHermesCommand({ subcommand: sub, prompt, format });
+            break;
+        }
         case 'update':
         case 'upgrade': {
             const check = args.includes('--check') || args.includes('-c');
@@ -197,6 +205,7 @@ Commands:
   update              Check for updates and automatically upgrade Routed (--check to inspect)
   mcp                 Start Model Context Protocol (MCP) server for LM Studio, Cursor, Claude
   ollama <subcommand> Ollama tool schemas, Modelfiles, and direct route integration
+  hermes <subcommand> Hermes agent schemas (JSON/XML), prompts, and direct route integration
   route "<prompt>"    Find the best matching Agent Skill(s) for a prompt
   scan                Scan supported AI environments and update skill index
   skills              List all discovered and indexed skills

@@ -48,6 +48,9 @@ export async function runRoute(options) {
             if (cand.signals.matchedTokens.length > 0) {
                 console.log(`  Matched Tokens:       ${cand.signals.matchedTokens.join(', ')}`);
             }
+            if (cand.signals.historyBonus && cand.signals.historyBonus > 0) {
+                console.log(`  Adaptive History:     +${cand.signals.historyBonus.toFixed(2)} (decayed count: ${cand.signals.decayedCount?.toFixed(1) ?? '1.0'})`);
+            }
         }
     }
     console.log('');

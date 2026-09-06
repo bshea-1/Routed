@@ -8,6 +8,7 @@ export * from './hosts/codex.js';
 export * from './hosts/mcp.js';
 export * from './hosts/lmstudio.js';
 export * from './hosts/ollama.js';
+export * from './hosts/hermes.js';
 export * from './hosts/windsurf.js';
 export * from './hosts/continue.js';
 export * from './deduplication/deduplicator.js';

@@ -126,6 +126,31 @@ export function detectEnvironments(workspaceRoot) {
             };
         })(),
         (() => {
+            const homeHermes = path.join(home, '.hermes');
+            const xdgHermes = path.join(process.env.XDG_CONFIG_HOME || path.join(home, '.config'), 'hermes');
+            const wsHermes = path.join(cwd, '.hermes');
+            const skillPaths = [];
+            const homeSkills = path.join(homeHermes, 'skills');
+            const xdgSkills = path.join(xdgHermes, 'skills');
+            const wsSkills = path.join(wsHermes, 'skills');
+            if (fs.existsSync(homeSkills))
+                skillPaths.push(homeSkills);
+            if (fs.existsSync(xdgSkills))
+                skillPaths.push(xdgSkills);
+            if (fs.existsSync(wsSkills))
+                skillPaths.push(wsSkills);
+            const exists = fs.existsSync(homeHermes) || fs.existsSync(xdgHermes) || fs.existsSync(wsHermes);
+            return {
+                id: 'hermes',
+                name: 'Hermes',
+                detected: exists,
+                basePath: fs.existsSync(homeHermes) ? homeHermes : (fs.existsSync(xdgHermes) ? xdgHermes : wsHermes),
+                skillPaths,
+                adapterSupported: true,
+                configSource: 'builtin',
+            };
+        })(),
+        (() => {
             const localSkills = path.join(cwd, 'skills');
             const exists = fs.existsSync(localSkills);
             const skillPaths = [];

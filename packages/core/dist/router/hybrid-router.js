@@ -3,6 +3,7 @@ import { checkExactMatch } from '../lexical/exact.js';
 import { SemanticEngine } from '../semantic/semantic-engine.js';
 import { HybridScorer } from '../scorer/hybrid-scorer.js';
 import { RoutedDatabase } from '../storage/database.js';
+import { LearningStore } from '../learning/learning-store.js';
 const TRIVIAL_PROMPT_PATTERNS = [
     /^(rename|change)\s+(variable|function|param|class)\b/i,
     /^(fix|correct)\s+(typo|spelling)\b/i,
@@ -31,7 +32,7 @@ export class HybridRouter {
         this.scorer = new HybridScorer();
         this.db = db || new RoutedDatabase();
         this.semantic = semantic || new SemanticEngine();
-        this.learningStore = learningStore;
+        this.learningStore = learningStore || new LearningStore();
         if (skills.length > 0) {
             this.updateSkills(skills);
         }
@@ -144,27 +145,36 @@ export class HybridRouter {
                 const queryLower = clause.toLowerCase();
                 const metaSignal = skill.tags.some((t) => queryLower.includes(t.toLowerCase())) ||
                     skill.keywords.some((k) => queryLower.includes(k.toLowerCase())) ? 1.0 : 0.0;
+                let customOptions = options;
+                let prefInfo = null;
+                if (this.learningStore) {
+                    prefInfo = this.learningStore.getPreferenceInfo(clause, skill.id);
+                    if (prefInfo && prefInfo.bonus > 0) {
+                        customOptions = {
+                            ...options,
+                            metadataWeight: Math.min(0.25, (options.metadataWeight ?? 0.05) + prefInfo.bonus),
+                        };
+                    }
+                }
                 const components = {
                     semanticSimilarity: sem,
                     lexicalSimilarity: bm.normalizedScore,
                     exactOrAlias: Math.max(exact.exactMatchScore, matchOrZero(exact.aliasMatchScore)),
-                    metadataSignal: metaSignal,
+                    metadataSignal: prefInfo && prefInfo.bonus > 0 ? 1.0 : metaSignal,
                     rawBm25Score: bm.rawScore,
                     matchedTokens: bm.matchedTokens,
                 };
-                let scored = this.scorer.computeScore(skill, components, options);
-                if (this.learningStore) {
-                    const bonus = this.learningStore.getPreferenceBonus(clause, skill.id);
-                    if (bonus > 0) {
-                        scored = {
-                            ...scored,
-                            score: Math.min(1.0, scored.score + bonus),
-                            signals: {
-                                ...scored.signals,
-                                metadataScore: Math.min(1.0, scored.signals.metadataScore + bonus),
-                            },
-                        };
-                    }
+                let scored = this.scorer.computeScore(skill, components, customOptions);
+                if (prefInfo && prefInfo.bonus > 0) {
+                    scored = {
+                        ...scored,
+                        signals: {
+                            ...scored.signals,
+                            metadataScore: Math.min(1.0, scored.signals.metadataScore + prefInfo.bonus),
+                            historyBonus: prefInfo.bonus,
+                            decayedCount: prefInfo.decayedCount,
+                        },
+                    };
                 }
                 if (scored.score > 0.05) {
                     clauseCandidates.push(scored);

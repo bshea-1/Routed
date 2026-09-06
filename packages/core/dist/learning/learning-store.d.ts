@@ -12,7 +12,17 @@ export declare class LearningStore {
     private load;
     private save;
     recordCorrection(query: string, preferredSkillId: string): void;
-    getPreferenceBonus(query: string, skillId: string): number;
+    static readonly HALF_LIFE_DAYS = 21;
+    static readonly HALF_LIFE_MS: number;
+    static readonly DECAY_LAMBDA: number;
+    getDecayedCount(correction: RoutingCorrection, now?: number): number;
+    getPreferenceBonus(query: string, skillId: string, now?: number): number;
+    getPreferenceInfo(query: string, skillId: string, now?: number): {
+        bonus: number;
+        rawCount: number;
+        decayedCount: number;
+        daysSinceUpdate: number;
+    } | null;
     clear(): number;
     getCount(): number;
     getAll(): RoutingCorrection[];
