@@ -82,14 +82,16 @@ export class HybridRouter {
         }
 
         const exactSkillsFound: ScoredSkill[] = [];
-        const seenExactIds = new Set<string>();
+        const seenExactNames = new Set<string>();
 
         for (const clause of clauses) {
             for (const skill of this.skills) {
+                if (skill.name.toLowerCase() === 'route') continue;
                 const match = checkExactMatch(clause, skill);
                 const score = Math.max(match.exactMatchScore, match.aliasMatchScore);
-                if (score >= 0.90 && !seenExactIds.has(skill.id)) {
-                    seenExactIds.add(skill.id);
+                const normName = skill.name.toLowerCase();
+                if (score >= 0.90 && !seenExactNames.has(normName)) {
+                    seenExactNames.add(normName);
                     exactSkillsFound.push({
                         skill,
                         score: score,
@@ -150,6 +152,7 @@ export class HybridRouter {
             const clauseCandidates: ScoredSkill[] = [];
 
             for (const skill of this.skills) {
+                if (skill.name.toLowerCase() === 'route') continue;
                 const exact = checkExactMatch(clause, skill);
                 const bm = bm25Map.get(skill.id) || { rawScore: 0, normalizedScore: 0, matchedTokens: [] };
                 const sem = semanticMap.get(skill.id) || 0;
@@ -184,9 +187,10 @@ export class HybridRouter {
 
                 if (scored.score > 0.05) {
                     clauseCandidates.push(scored);
-                    const existing = candidateMap.get(skill.id);
+                    const normName = skill.name.toLowerCase();
+                    const existing = candidateMap.get(normName);
                     if (!existing || scored.score > existing.score) {
-                        candidateMap.set(skill.id, scored);
+                        candidateMap.set(normName, scored);
                     }
                 }
             }
@@ -222,20 +226,22 @@ export class HybridRouter {
         }
 
         const selectedSkills: ScoredSkill[] = [];
-        const selectedIds = new Set<string>();
+        const selectedNames = new Set<string>();
 
         for (const match of clauseTopMatches) {
-            if (!selectedIds.has(match.skill.id) && selectedSkills.length < topK) {
-                selectedIds.add(match.skill.id);
+            const normName = match.skill.name.toLowerCase();
+            if (!selectedNames.has(normName) && selectedSkills.length < topK) {
+                selectedNames.add(normName);
                 selectedSkills.push(match);
             }
         }
 
         for (const cand of candidates) {
             if (selectedSkills.length >= topK) break;
-            if (!selectedIds.has(cand.skill.id)) {
+            const normName = cand.skill.name.toLowerCase();
+            if (!selectedNames.has(normName)) {
                 if (cand.score >= multiSkillThreshold && cand.score >= candidates[0].score * 0.50) {
-                    selectedIds.add(cand.skill.id);
+                    selectedNames.add(normName);
                     selectedSkills.push(cand);
                 }
             }

@@ -76,16 +76,19 @@ export class SkillScanner {
                 if (entry.isFile()) {
                     if (entry.name.toLowerCase() === 'skill.md') {
                         const skill = parseSkillFile(fullPath, host);
-                        if (skill) {
+                        if (skill && skill.name.toLowerCase() !== 'route') {
                             results.push(skill);
                         }
                     }
                 }
                 else if (entry.isDirectory() || entry.isSymbolicLink()) {
+                    if (entry.name.toLowerCase() === 'route') {
+                        continue;
+                    }
                     const candidateSkillFile = path.join(fullPath, 'SKILL.md');
                     if (fs.existsSync(candidateSkillFile)) {
                         const skill = parseSkillFile(candidateSkillFile, host);
-                        if (skill) {
+                        if (skill && skill.name.toLowerCase() !== 'route') {
                             results.push(skill);
                         }
                     }
