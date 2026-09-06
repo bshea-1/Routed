@@ -14,6 +14,7 @@ export declare class RoutedDatabase {
     upsertSkill(skill: SkillMetadata): void;
     getAllSkills(): SkillMetadata[];
     getSkillByPath(filePath: string): SkillMetadata | null;
+    getSkillById(id: string): SkillMetadata | null;
     deleteSkillByPath(filePath: string): boolean;
     removeMissingSkills(validPaths: Set<string>): number;
     saveEnvironments(environments: HostEnvironment[]): void;

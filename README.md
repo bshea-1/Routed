@@ -4,13 +4,13 @@
 
 **The Universal Local Router for Agent Skills**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT) [![Latest Release](https://img.shields.io/badge/Release-v1.0.0-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation)
+[![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT) [![Latest Release](https://img.shields.io/badge/Release-v1.1.0-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation)
 
 </div>
 
 <div align="center" class="quick-nav">
 
-[Overview](#overview) | [Architecture](#architecture) | [Installation](#installation) | [Quick Start](#quick-start) | [Comparison](#comparison) | [Environments](#supported-environments) | [CLI](#cli-reference) | [FAQ](#faq) | [Star History](#star-history) | [License](#license)
+[Overview](#overview) | [Architecture](#architecture) | [Installation](#installation) | [Quick Start](#quick-start) | [Comparison](#comparison) | [Environments](#supported-environments) | [MCP & Local Models](#model-context-protocol-mcp--local-models) | [CLI](#cli-reference) | [FAQ](#faq) | [Star History](#star-history) | [License](#license)
 
 </div><br>
 
@@ -29,6 +29,8 @@ Routed is a **universal, local, zero-token router** for Agent Skills across AI c
 
 - **Zero Token Cost**: Eliminates costly LLM routing calls (saving 1,000+ prompt tokens per interaction).
 - **Sub-20ms Latency**: Local CPU-evaluated hybrid search responds instantly without network roundtrips.
+- **Model Context Protocol (MCP) Server**: Run Routed via `routed mcp` to eliminate context pollution in LM Studio, Cursor, Claude Desktop, Windsurf, and Continue.
+- **Native Multilingual Understanding**: Understands German, Spanish, French, Japanese, and 100+ languages natively, automatically handling compound words without language switches.
 - **Privacy First**: Prompt routing is executed 100% locally; no user queries leave your machine.
 - **Multi-Skill Dispatch**: Decomposes compound prompts and activates multiple skills simultaneously.
 
@@ -130,13 +132,48 @@ routed doctor
 
 ## Supported Environments
 
-| Environment | Adapter Path | Auto-Detection | Integration Method |
+| Environment | Adapter Path / Target | Auto-Detection | Integration Method |
 | :--- | :--- | :---: | :--- |
-| **Antigravity** | `~/.gemini/config/skills/route/SKILL.md` | Supported | Native skill dispatch & background router |
-| **OpenCode** | `~/.opencode/skills/route/SKILL.md` | Supported | Local skill loader & interactive prompts |
-| **Claude Code** | `~/.claude/skills/route/SKILL.md` | Supported | Slash command integration & terminal runner |
-| **Cursor** | `.cursor/rules/routed.mdc` | Supported | Rule-based automatic prompt interception |
+| **Model Context Protocol (MCP)** | `claude_desktop_config.json`, `.cursor/mcp.json` | Supported | Universal JSON-RPC 2.0 stdio server (`routed mcp`) |
+| **LM Studio** | `~/.cache/lm-studio/mcp.json` | Supported | Local MCP server for GPU-hosted local LLMs |
+| **Ollama** | `~/.ollama/routed/routed-tools.json` | Supported | Tool schemas (`/api/chat`) and dynamic Modelfiles |
+| **Antigravity** | `~/.gemini/config/skills/route/SKILL.md` | Supported | Native skill dispatch and background router |
+| **Claude Code** | `~/.claude/skills/route/SKILL.md` | Supported | Slash command integration and terminal runner |
+| **Cursor** | `.cursor/rules/routed.mdc` / `mcp.json` | Supported | Rule-based prompt interception and MCP tools |
+| **Codeium Windsurf** | `~/.codeium/windsurf/mcp_config.json` | Supported | Cascade MCP tool server |
+| **Continue.dev** | `~/.continue/config.json` | Supported | Local IDE tool provider for Ollama and LM Studio |
+| **OpenCode** | `~/.opencode/skills/route/SKILL.md` | Supported | Local skill loader and interactive prompts |
 | **Codex** | `.agents/skills/route/SKILL.md` | Supported | Universal Agentic Skill schema |
+
+---
+
+## Model Context Protocol (MCP) & Local Models
+
+Routed can be attached as a standard MCP server to any compatible host (LM Studio, Cursor, Claude Desktop, Windsurf, Continue). Instead of dumping 50+ tool schemas into your model context and exhausting VRAM, the host model only calls the `route_skill` tool. Routed evaluates the prompt on local CPU in sub-20ms and returns only the matched skill manifests.
+
+### Add to Claude Desktop / Cursor / LM Studio
+Add the following snippet to your host configuration file:
+```json
+{
+  "mcpServers": {
+    "routed": {
+      "command": "routed",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### Direct Ollama Integration
+Generate Ollama tool schemas for `/api/chat` function calling:
+```bash
+routed ollama tools
+```
+
+Route a prompt and generate a ready-to-run Ollama API payload:
+```bash
+routed ollama route "audit firestore security rules"
+```
 
 ---
 
@@ -145,6 +182,8 @@ routed doctor
 | Command | Description | Example |
 | :--- | :--- | :--- |
 | `routed setup` | Run interactive setup wizard | `routed setup` |
+| `routed mcp` | Start Model Context Protocol server over stdio | `routed mcp` |
+| `routed ollama <cmd>` | Ollama tool schemas, routes, and Modelfiles | `routed ollama tools` |
 | `routed route "<prompt>"` | Find matching skill(s) for a prompt | `routed route "write unit test with TDD"` |
 | `routed scan` | Scan supported environments and update index | `routed scan` |
 | `routed skills` | List all discovered and indexed skills | `routed skills` |
@@ -222,7 +261,13 @@ Routed stores its index and database files in standard platform directories:
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=bshea-1/Routed&type=Date)](https://star-history.com/#bshea-1/Routed&Date)
+<div align="center">
+
+[![Star History Chart](assets/star-history.svg)](https://github.com/bshea-1/Routed/stargazers)
+
+<p><em>Real-time stargazer history powered directly by the GitHub Stargazers History API.</em></p>
+
+</div>
 
 ---
 

@@ -5,6 +5,11 @@ import { ClaudeCodeAdapter } from './hosts/claude-code.js';
 import { OpenCodeAdapter } from './hosts/opencode.js';
 import { CursorAdapter } from './hosts/cursor.js';
 import { CodexAdapter } from './hosts/codex.js';
+import { McpAdapter } from './hosts/mcp.js';
+import { LmStudioAdapter } from './hosts/lmstudio.js';
+import { OllamaAdapter } from './hosts/ollama.js';
+import { WindsurfAdapter } from './hosts/windsurf.js';
+import { ContinueAdapter } from './hosts/continue.js';
 export class AdapterRegistry {
     private adapters = new Map<HostId, HostAdapter>();
     constructor() {
@@ -17,6 +22,11 @@ export class AdapterRegistry {
             new OpenCodeAdapter(),
             new CursorAdapter(),
             new CodexAdapter(),
+            new McpAdapter(),
+            new LmStudioAdapter(),
+            new OllamaAdapter(),
+            new WindsurfAdapter(),
+            new ContinueAdapter(),
         ];
         for (const a of list) {
             this.adapters.set(a.id, a);

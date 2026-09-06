@@ -21,7 +21,7 @@ export class SemanticEngine {
     private initPromise: Promise<boolean> | null = null;
     constructor(options: SemanticEngineOptions = {}) {
         const paths = getPaths();
-        this.modelName = options.modelName || process.env.ROUTED_SEMANTIC_MODEL || 'Snowflake/snowflake-arctic-embed-s';
+        this.modelName = options.modelName || process.env.ROUTED_SEMANTIC_MODEL || 'Xenova/multilingual-e5-small';
         this.cacheDir = options.cacheDir || paths.modelDir;
         this.keepWarmMs = options.keepWarmMs ?? 5 * 60 * 1000;
     }
@@ -71,9 +71,16 @@ export class SemanticEngine {
         if (isReady && this.pipelineInstance) {
             this.resetWarmTimer();
             try {
-                const formatted = (isQuery && this.modelName.includes('arctic-embed'))
-                    ? `Represent this sentence for searching relevant passages: ${text}`
-                    : text;
+                let formatted = text;
+                if (isQuery) {
+                    if (this.modelName.includes('e5')) {
+                        formatted = `query: ${text}`;
+                    } else if (this.modelName.includes('arctic-embed')) {
+                        formatted = `Represent this sentence for searching relevant passages: ${text}`;
+                    }
+                } else if (this.modelName.includes('e5')) {
+                    formatted = `passage: ${text}`;
+                }
                 const output = await this.pipelineInstance(formatted, { pooling: 'mean', normalize: true });
                 const rawData = Array.from(output.data as Float32Array | number[]);
                 return normalizeVector(rawData);
@@ -166,7 +173,7 @@ export class SemanticEngine {
     public fallbackDenseVector(text: string): number[] {
         const dim = 384;
         const vector = new Array(dim).fill(0);
-        const cleaned = text.toLowerCase().replace(/[^\w\s]/g, ' ');
+        const cleaned = text.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, ' ');
         const tokens = cleaned.split(/\s+/).filter(Boolean);
         if (tokens.length === 0)
             return vector;

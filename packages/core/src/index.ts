@@ -18,3 +18,4 @@ export * from './doctor/doctor.js';
 export * from './watcher/skill-watcher.js';
 export * from './learning/learning-store.js';
 export * from './uninstaller/uninstaller.js';
+export * from './mcp/mcp-server.js';

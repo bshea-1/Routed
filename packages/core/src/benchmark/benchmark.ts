@@ -3,7 +3,7 @@ import { RoutedDatabase } from '../storage/database.js';
 import { SkillMetadata } from '../types.js';
 export interface BenchmarkCase {
     id: string;
-    category: 'exact-match' | 'synonym' | 'technical-jargon' | 'abbreviation' | 'indirect-intent' | 'multi-skill' | 'no-skill' | 'irrelevant-trap';
+    category: 'exact-match' | 'synonym' | 'technical-jargon' | 'abbreviation' | 'indirect-intent' | 'multi-skill' | 'no-skill' | 'irrelevant-trap' | 'multilingual';
     prompt: string;
     expectedSkills: string[];
     description: string;
@@ -84,6 +84,34 @@ export const BENCHMARK_CASES: BenchmarkCase[] = [
         prompt: 'fix OOM crashes in our backend service',
         expectedSkills: ['memory-leak-debugging'],
         description: 'OOM (Out of Memory) abbreviation',
+    },
+    {
+        id: 'multi-de-1',
+        category: 'multilingual',
+        prompt: 'Speicherleck in node debuggen',
+        expectedSkills: ['memory-leak-debugging'],
+        description: 'German compound noun Speicherleck for memory-leak-debugging',
+    },
+    {
+        id: 'multi-de-2',
+        category: 'multilingual',
+        prompt: 'Sicherheitsrichtlinien und Firestore Zugriffsregeln prüfen',
+        expectedSkills: ['firebase-security-rules-auditor'],
+        description: 'German security rules audit for Firestore',
+    },
+    {
+        id: 'multi-es-1',
+        category: 'multilingual',
+        prompt: 'encontrar y depurar fugas de memoria en nodejs',
+        expectedSkills: ['memory-leak-debugging'],
+        description: 'Spanish memory leak debugging prompt',
+    },
+    {
+        id: 'multi-fr-1',
+        category: 'multilingual',
+        prompt: 'optimiser le Largest Contentful Paint et Core Web Vitals',
+        expectedSkills: ['debug-optimize-lcp'],
+        description: 'French Core Web Vitals optimization prompt',
     },
     {
         id: 'intent-1',

@@ -1,0 +1,137 @@
+<!-- Stargazers History Chart generated directly from GitHub API GET /repos/bshea-1/Routed/stargazers/history -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="800" height="360">
+  <defs>
+    <style>
+      :root {
+        --bg-color: #0d1117;
+        --card-border: #30363d;
+        --grid-line: #21262d;
+        --axis-color: #30363d;
+        --text-primary: #f0f6fc;
+        --text-secondary: #8b949e;
+        --line-stroke: #58a6ff;
+        --dot-border: #58a6ff;
+        --dot-center: #ffffff;
+        --badge-bg: #161b22;
+        --badge-border: #388bfd;
+        --badge-text: #58a6ff;
+        --grad-stop1: rgba(88, 166, 255, 0.35);
+        --grad-stop2: rgba(88, 166, 255, 0.00);
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg-color: #ffffff;
+          --card-border: #d0d7de;
+          --grid-line: #eaeef2;
+          --axis-color: #d0d7de;
+          --text-primary: #1f2328;
+          --text-secondary: #656d76;
+          --line-stroke: #0969da;
+          --dot-border: #0969da;
+          --dot-center: #ffffff;
+          --badge-bg: #f6f8fa;
+          --badge-border: #0969da;
+          --badge-text: #0969da;
+          --grad-stop1: rgba(9, 105, 218, 0.25);
+          --grad-stop2: rgba(9, 105, 218, 0.00);
+        }
+      }
+      .bg { fill: var(--bg-color); stroke: var(--card-border); stroke-width: 1; rx: 8; }
+      .chart-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 600; fill: var(--text-primary); }
+      .chart-subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 12px; fill: var(--text-secondary); }
+      .tick-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 11px; fill: var(--text-secondary); }
+      .data-line { fill: none; stroke: var(--line-stroke); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+      .data-area { fill: url(#lineGradient); }
+      .data-dot { fill: var(--dot-border); }
+      .data-dot-center { fill: var(--dot-center); }
+      .badge-rect { fill: var(--badge-bg); stroke: var(--badge-border); stroke-width: 1; rx: 12; }
+      .badge-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: var(--badge-text); }
+    </style>
+    <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--grad-stop1)" />
+      <stop offset="100%" stop-color="var(--grad-stop2)" />
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="360" class="bg" />
+
+  <!-- Title and Header -->
+  <text x="65" y="32" class="chart-title">bshea-1/Routed Star History</text>
+  <text x="65" y="48" class="chart-subtitle">Direct weekly stargazer history via GitHub REST API</text>
+
+  <!-- Total Stars Badge -->
+  <g transform="translate(655, 20)">
+    <rect width="110" height="26" class="badge-rect" />
+    <text x="55" y="17" text-anchor="middle" class="badge-text">7 Stars</text>
+  </g>
+
+  <!-- Y Axis Grid and Ticks -->
+  <g>
+        <line x1="65" y1="310.0" x2="765" y2="310.0" stroke="var(--grid-line)" stroke-dasharray="3,3" />
+        <text x="53" y="314.0" text-anchor="end" class="tick-label">0</text>
+        
+
+        <line x1="65" y1="238.6" x2="765" y2="238.6" stroke="var(--grid-line)" stroke-dasharray="3,3" />
+        <text x="53" y="242.6" text-anchor="end" class="tick-label">2</text>
+        
+
+        <line x1="65" y1="167.1" x2="765" y2="167.1" stroke="var(--grid-line)" stroke-dasharray="3,3" />
+        <text x="53" y="171.1" text-anchor="end" class="tick-label">4</text>
+        
+
+        <line x1="65" y1="95.7" x2="765" y2="95.7" stroke="var(--grid-line)" stroke-dasharray="3,3" />
+        <text x="53" y="99.7" text-anchor="end" class="tick-label">6</text>
+        
+
+        <line x1="65" y1="60.0" x2="765" y2="60.0" stroke="var(--grid-line)" stroke-dasharray="3,3" />
+        <text x="53" y="64.0" text-anchor="end" class="tick-label">7</text>
+        </g>
+
+  <!-- X Axis and Ticks -->
+  <line x1="65" y1="310" x2="765" y2="310" stroke="var(--axis-color)" stroke-width="1.5" />
+  <line x1="65" y1="60" x2="65" y2="310" stroke="var(--axis-color)" stroke-width="1.5" />
+  <g>
+        <line x1="65.0" y1="310" x2="65.0" y2="316" stroke="var(--grid-line)" />
+        <text x="65.0" y="332" text-anchor="middle" class="tick-label">Sep 4</text>
+        
+
+        <line x1="240.0" y1="310" x2="240.0" y2="316" stroke="var(--grid-line)" />
+        <text x="240.0" y="332" text-anchor="middle" class="tick-label">Sep 6</text>
+        
+
+        <line x1="415.0" y1="310" x2="415.0" y2="316" stroke="var(--grid-line)" />
+        <text x="415.0" y="332" text-anchor="middle" class="tick-label">Sep 8</text>
+        
+
+        <line x1="590.0" y1="310" x2="590.0" y2="316" stroke="var(--grid-line)" />
+        <text x="590.0" y="332" text-anchor="middle" class="tick-label">Sep 10</text>
+        
+
+        <line x1="765.0" y1="310" x2="765.0" y2="316" stroke="var(--grid-line)" />
+        <text x="765.0" y="332" text-anchor="middle" class="tick-label">Sep 12</text>
+        </g>
+
+  <!-- Gradient Area Under Curve -->
+  <path d="M 65.0,310.0 L 152.5,202.9 L 240.0,60.0 L 327.5,60.0 L 415.0,60.0 L 502.5,60.0 L 590.0,60.0 L 677.5,60.0 L 765.0,60.0 L 765.0,310.0 L 65.0,310.0 Z" class="data-area" />
+
+  <!-- Plot Line -->
+  <path d="M 65.0,310.0 L 152.5,202.9 L 240.0,60.0 L 327.5,60.0 L 415.0,60.0 L 502.5,60.0 L 590.0,60.0 L 677.5,60.0 L 765.0,60.0" class="data-line" />
+
+  <!-- Data Points -->
+  <g>
+        <circle cx="65.0" cy="310.0" r="4.5" class="data-dot" />
+        <circle cx="65.0" cy="310.0" r="2" class="data-dot-center" />
+        
+
+        <circle cx="152.5" cy="202.9" r="4.5" class="data-dot" />
+        <circle cx="152.5" cy="202.9" r="2" class="data-dot-center" />
+        
+
+        <circle cx="240.0" cy="60.0" r="4.5" class="data-dot" />
+        <circle cx="240.0" cy="60.0" r="2" class="data-dot-center" />
+        
+
+        <circle cx="765.0" cy="60.0" r="4.5" class="data-dot" />
+        <circle cx="765.0" cy="60.0" r="2" class="data-dot-center" />
+        </g>
+</svg>

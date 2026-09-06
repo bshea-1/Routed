@@ -29,7 +29,7 @@ export async function runSetupCommand(options: {
 
 One /route command for your AI coding tools.
 Local semantic intelligence. Zero cloud routing tokens.
-Works with Antigravity, OpenCode, Claude Code, Cursor, and Codex.
+Works with Antigravity, OpenCode, Claude Code, Cursor, Codex, LM Studio, Ollama, and MCP.
 `);
     if (!isAutomated) {
         await promptUser('Press [Enter] to begin installation (or Ctrl+C to cancel)... ');

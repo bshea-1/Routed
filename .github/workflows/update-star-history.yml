@@ -1,0 +1,44 @@
+name: Update Star History Chart
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/generate-star-history.mjs'
+
+permissions:
+  contents: write
+
+jobs:
+  update-chart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate Star History SVG
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ROUTED_REPO: ${{ github.repository }}
+        run: node scripts/generate-star-history.mjs
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "202353692+bshea-1@users.noreply.github.com"
+          git config --local user.name "bshea-1"
+          git add assets/star-history.svg
+          if git diff --staged --quiet; then
+            echo "Star history chart is already up to date."
+          else
+            git commit -m "docs: update star history chart from github api"
+            git push origin main
+          fi

@@ -184,6 +184,28 @@ export class RoutedDatabase {
         }
         return this.jsonStore.skills[filePath] || null;
     }
+    getSkillById(id) {
+        if (this.db) {
+            const stmt = this.db.prepare(`SELECT * FROM skills WHERE id = ?`);
+            const row = stmt.get(id);
+            if (!row)
+                return null;
+            return {
+                id: String(row.id),
+                name: String(row.name),
+                description: String(row.description || ''),
+                path: String(row.path),
+                sourceHost: String(row.source_host),
+                aliases: JSON.parse(String(row.aliases_json || '[]')),
+                keywords: JSON.parse(String(row.keywords_json || '[]')),
+                tags: JSON.parse(String(row.tags_json || '[]')),
+                fileHash: String(row.file_hash || ''),
+                modifiedAt: Number(row.modified_at || 0),
+                bodyPreview: String(row.body_preview || ''),
+            };
+        }
+        return Object.values(this.jsonStore.skills).find((s) => s.id === id) || null;
+    }
     deleteSkillByPath(filePath) {
         const existing = this.getSkillByPath(filePath);
         if (!existing)

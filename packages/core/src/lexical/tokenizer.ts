@@ -35,6 +35,29 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'ux': ['user', 'experience'],
     'db': ['database'],
     'perf': ['performance'],
+    // Multilingual technical roots (German, Spanish, French)
+    'speicher': ['memory'],
+    'speicherleck': ['memory', 'leak'],
+    'leck': ['leak'],
+    'sicherheit': ['security'],
+    'sicherheitsprüfung': ['security', 'rules', 'audit'],
+    'sicherheitsregeln': ['security', 'rules', 'auditor', 'audit'],
+    'sicherheitsrichtlinien': ['security', 'rules', 'auditor', 'audit'],
+    'richtlinien': ['rules', 'policies'],
+    'zugriffsregeln': ['security', 'rules', 'access'],
+    'datenbank': ['database'],
+    'leistung': ['performance'],
+    'fehler': ['error', 'bug'],
+    'berechtigung': ['permission', 'auth'],
+    'zugriff': ['access'],
+    'oberfläche': ['interface', 'ui'],
+    'memoria': ['memory'],
+    'fuga': ['leak'],
+    'seguridad': ['security'],
+    'rendimiento': ['performance'],
+    'mémoire': ['memory'],
+    'fuite': ['leak'],
+    'sécurité': ['security'],
 };
 export function tokenize(text: string, options: {
     removeStopWords?: boolean;
@@ -48,7 +71,7 @@ export function tokenize(text: string, options: {
         return [];
     const cleaned = text
         .toLowerCase()
-        .replace(/[^\w\s-]/g, ' ')
+        .replace(/[^\p{L}\p{N}\s-]/gu, ' ')
         .replace(/[-_]/g, ' ');
     const rawTokens = cleaned.split(/\s+/).filter(Boolean);
     const tokens: string[] = [];
@@ -58,6 +81,25 @@ export function tokenize(text: string, options: {
         if (removeStopWords && STOP_WORDS.has(token))
             continue;
         tokens.push(token);
+
+        // Automatic compound word decomposition for long technical words
+        if (token.length > 7) {
+            for (const [rootKey, syns] of Object.entries(TECHNICAL_SYNONYMS)) {
+                if (token.includes(rootKey) && token !== rootKey) {
+                    if (!tokens.includes(rootKey)) {
+                        tokens.push(rootKey);
+                    }
+                    if (expandSynonyms) {
+                        for (const syn of syns) {
+                            if (!tokens.includes(syn)) {
+                                tokens.push(syn);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         if (expandSynonyms && TECHNICAL_SYNONYMS[token]) {
             for (const syn of TECHNICAL_SYNONYMS[token]) {
                 if (!tokens.includes(syn)) {

@@ -10,7 +10,9 @@ import { runWatch } from './commands/watch.js';
 import { runUninstallCommand } from './commands/uninstall.js';
 import { runFeedbackCommand } from './commands/feedback.js';
 import { runSetupCommand } from './commands/setup.js';
-export const VERSION = '1.0.0';
+import { runMcpServer } from './commands/mcp.js';
+import { runOllamaCommand } from './commands/ollama.js';
+export const VERSION = '1.1.0';
 export async function main(args: string[]): Promise<void> {
     const command = args[0];
     if (!command || command === 'help' || command === '--help' || command === '-h') {
@@ -157,6 +159,17 @@ export async function main(args: string[]): Promise<void> {
             runStatus({ json });
             break;
         }
+        case 'mcp': {
+            await runMcpServer();
+            break;
+        }
+        case 'ollama': {
+            const sub = args[1];
+            const prompt = args[2];
+            const model = args[3];
+            await runOllamaCommand({ subcommand: sub, prompt, model });
+            break;
+        }
         default:
             console.error(`Unknown command: ${command}`);
             printHelp();
@@ -172,6 +185,8 @@ Usage:
 
 Commands:
   setup               Interactive 4-screen setup wizard (auto-detects & installs)
+  mcp                 Start Model Context Protocol (MCP) server for LM Studio, Cursor, Claude
+  ollama <subcommand> Ollama tool schemas, Modelfiles, and direct route integration
   route "<prompt>"    Find the best matching Agent Skill(s) for a prompt
   scan                Scan supported AI environments and update skill index
   skills              List all discovered and indexed skills
