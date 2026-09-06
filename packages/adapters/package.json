@@ -1,0 +1,19 @@
+{
+  "name": "@routed/adapters",
+  "version": "1.0.0",
+  "description": "Routed Host Adapters for AI Coding Environments",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@routed/core": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.7.0"
+  }
+}

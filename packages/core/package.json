@@ -1,0 +1,20 @@
+{
+  "name": "@routed/core",
+  "version": "1.0.0",
+  "description": "Routed Core: Discovery, indexing, and routing engine",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,1 @@
+{"version":3,"file":"skill-parser.d.ts","sourceRoot":"","sources":["../../src/parser/skill-parser.ts"],"names":[],"mappings":"AAIA,OAAO,EAAE,MAAM,EAAE,aAAa,EAAE,MAAM,aAAa,CAAC;AACpD,wBAAgB,cAAc,CAAC,QAAQ,EAAE,MAAM,EAAE,UAAU,GAAE,MAAiB,GAAG,aAAa,GAAG,IAAI,CAoBpG;AACD,wBAAgB,iBAAiB,CAAC,OAAO,EAAE,MAAM,EAAE,QAAQ,EAAE,MAAM,EAAE,UAAU,GAAE,MAAiB,GAAG,aAAa,GAAG,IAAI,CAiGxH"}

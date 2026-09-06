@@ -1,0 +1,22 @@
+{
+  "name": "@routed/cli",
+  "version": "1.0.0",
+  "description": "Routed CLI: Command line interface for Routed",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "routed": "./bin/routed.js"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@routed/core": "^1.0.0",
+    "@routed/adapters": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.7.0"
+  }
+}
