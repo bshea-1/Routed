@@ -1,6 +1,6 @@
 {
   "name": "@routed/core",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Routed Core: Discovery, indexing, and routing engine",
   "license": "MIT",
   "type": "module",

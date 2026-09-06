@@ -1,4 +1,4 @@
-import { RoutedDatabase, detectEnvironments, getPaths, SemanticEngine } from '@routed/core';
+import { RoutedDatabase, detectEnvironments, getPaths, SemanticEngine } from '../../../core/dist/index.js';
 export interface StatusOptions {
     json?: boolean;
 }

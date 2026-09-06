@@ -1,12 +1,19 @@
 {
   "name": "routed",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Universal local router for Agent Skills across AI coding environments",
   "main": "packages/core/dist/index.js",
   "type": "module",
   "bin": {
     "routed": "./packages/cli/bin/routed.js"
   },
+  "files": [
+    "packages/core/dist",
+    "packages/adapters/dist",
+    "packages/cli/dist",
+    "packages/cli/bin",
+    "README.md"
+  ],
   "workspaces": [
     "packages/*"
   ],

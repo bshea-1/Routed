@@ -1,4 +1,4 @@
-import { HostId, SkillMetadata } from '@routed/core';
+import { HostId, SkillMetadata } from '../../core/dist/index.js';
 export interface AdapterStatus {
     hostId: HostId;
     name: string;

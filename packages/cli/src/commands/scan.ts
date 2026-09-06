@@ -1,4 +1,4 @@
-import { detectEnvironments, SkillScanner, RoutedDatabase, ensureDataDirectories, ScanResult } from '@routed/core';
+import { detectEnvironments, SkillScanner, RoutedDatabase, ensureDataDirectories, ScanResult } from '../../../core/dist/index.js';
 export interface ScanOptions {
     workspace?: string;
     json?: boolean;

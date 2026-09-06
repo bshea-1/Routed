@@ -1,0 +1,1 @@
+{"version":3,"file":"benchmark.d.ts","sourceRoot":"","sources":["../../src/commands/benchmark.ts"],"names":[],"mappings":"AAAA,OAAO,EAA8C,gBAAgB,EAAE,MAAM,6BAA6B,CAAC;AAC3G,MAAM,WAAW,uBAAuB;IACpC,IAAI,CAAC,EAAE,OAAO,CAAC;CAClB;AACD,wBAAsB,mBAAmB,CAAC,OAAO,GAAE,uBAA4B,GAAG,OAAO,CAAC,gBAAgB,CAAC,CAmC1G"}

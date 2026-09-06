@@ -1,5 +1,5 @@
-import { AdapterRegistry } from '@routed/adapters';
-import { HostId } from '@routed/core';
+import { AdapterRegistry } from '../../../adapters/dist/index.js';
+import { HostId } from '../../../core/dist/index.js';
 export interface AdaptersCommandOptions {
     action?: 'list' | 'install' | 'uninstall' | 'test';
     host?: string;

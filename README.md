@@ -4,13 +4,19 @@
 
 **The Universal Local Router for Agent Skills**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT) [![Latest Release](https://img.shields.io/badge/Release-v1.1.0-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation)
+[![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT) [![Latest Release](https://img.shields.io/badge/Release-v1.2.0-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation)
 
 </div>
 
 <div align="center" class="quick-nav">
 
 [Overview](#overview) | [Architecture](#architecture) | [Installation](#installation) | [Quick Start](#quick-start) | [Comparison](#comparison) | [Environments](#supported-environments) | [MCP & Local Models](#model-context-protocol-mcp--local-models) | [CLI](#cli-reference) | [FAQ](#faq) | [Star History](#star-history) | [License](#license)
+
+</div><br>
+
+<div align="center">
+
+<img src="assets/demo.gif" alt="Routed Terminal Demo" width="880">
 
 </div><br>
 
@@ -31,6 +37,8 @@ Routed is a **universal, local, zero-token router** for Agent Skills across AI c
 - **Sub-20ms Latency**: Local CPU-evaluated hybrid search responds instantly without network roundtrips.
 - **Model Context Protocol (MCP) Server**: Run Routed via `routed mcp` to eliminate context pollution in LM Studio, Cursor, Claude Desktop, Windsurf, and Continue.
 - **Native Multilingual Understanding**: Understands German, Spanish, French, Japanese, and 100+ languages natively, automatically handling compound words without language switches.
+- **Native Auto-Updater**: Automatic version checks and seamless in-place upgrades via `routed update`.
+- **Self-Healing Host Reconciliation**: Unified diagnostics and adapter repair via `routed doctor --fix`.
 - **Privacy First**: Prompt routing is executed 100% locally; no user queries leave your machine.
 - **Multi-Skill Dispatch**: Decomposes compound prompts and activates multiple skills simultaneously.
 
@@ -77,6 +85,32 @@ $$\text{Composite Score} = 0.60 \cdot \text{Semantic} + 0.25 \cdot \text{BM25} +
 ---
 
 ## Installation
+
+### Instant Test (Zero-Install via `npx`)
+
+Test Routed immediately in any project without downloading an installer:
+
+```bash
+npx routed route "refactor auth service and add unit tests" --explain
+```
+
+Or run the interactive setup wizard directly:
+
+```bash
+npx routed setup
+```
+
+To install globally via npm:
+
+```bash
+npm install -g routed
+```
+
+---
+
+### Standalone Installers
+
+For permanent, system-level local installation across all AI coding environments:
 
 | Platform | Installer Package | Format | Quick Install |
 | :--- | :--- | :--- | :--- |
@@ -182,13 +216,14 @@ routed ollama route "audit firestore security rules"
 | Command | Description | Example |
 | :--- | :--- | :--- |
 | `routed setup` | Run interactive setup wizard | `routed setup` |
+| `routed update` | Check for updates and upgrade Routed | `routed update --check` |
 | `routed mcp` | Start Model Context Protocol server over stdio | `routed mcp` |
 | `routed ollama <cmd>` | Ollama tool schemas, routes, and Modelfiles | `routed ollama tools` |
 | `routed route "<prompt>"` | Find matching skill(s) for a prompt | `routed route "write unit test with TDD"` |
 | `routed scan` | Scan supported environments and update index | `routed scan` |
 | `routed skills` | List all discovered and indexed skills | `routed skills` |
-| `routed adapters` | Manage `/route` adapters across AI tools | `routed adapters --install` |
-| `routed doctor` | Run diagnostics and self-repair | `routed doctor --fix` |
+| `routed adapters` | Manage `/route` adapters across AI tools | `routed adapters install` |
+| `routed doctor` | Run diagnostics and auto-reconciliation | `routed doctor --fix` |
 | `routed reindex` | Incrementally re-index and re-embed skills | `routed reindex` |
 | `routed watch` | Continuously monitor skill dirs for changes | `routed watch` |
 | `routed feedback` | Manage routing preferences and corrections | `routed feedback --list` |
@@ -205,6 +240,9 @@ Usage:
 
 Commands:
   setup               Run the interactive setup wizard
+  update              Check for updates and automatically upgrade Routed (--check to inspect)
+  mcp                 Start Model Context Protocol (MCP) server for LM Studio, Cursor, Claude
+  ollama <subcommand> Ollama tool schemas, Modelfiles, and direct route integration
   route "<prompt>"    Find the best matching Agent Skill(s) for a prompt
   scan                Scan supported AI environments and update index
   skills              List all discovered and indexed skills
@@ -225,6 +263,13 @@ Commands:
 ---
 
 ## FAQ
+
+<details>
+<summary><strong>What happens if setup or adapter installation encounters a partial failure across multiple hosts?</strong></summary>
+
+Routed follows an idempotent desired-state convergence model with zero blast radius. Each host adapter runs in an isolated boundary: if Cursor installs successfully but Claude Code fails (for example, due to a file lock or directory permission), Cursor is preserved and remains fully functional. Running `routed doctor --fix` or `routed adapters install` automatically detects and reconciles any missing adapters in a single command.
+
+</details>
 
 <details>
 <summary><strong>How does Routed operate with zero external API keys?</strong></summary>

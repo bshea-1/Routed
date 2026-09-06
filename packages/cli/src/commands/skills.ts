@@ -1,4 +1,4 @@
-import { RoutedDatabase } from '@routed/core';
+import { RoutedDatabase } from '../../../core/dist/index.js';
 export interface SkillsOptions {
     json?: boolean;
     filter?: string;

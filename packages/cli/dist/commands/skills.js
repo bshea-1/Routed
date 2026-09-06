@@ -1,4 +1,4 @@
-import { RoutedDatabase } from '@routed/core';
+import { RoutedDatabase } from '../../../core/dist/index.js';
 export function runSkills(options = {}) {
     const db = new RoutedDatabase();
     let skills = db.getAllSkills();

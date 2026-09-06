@@ -1,4 +1,4 @@
-import { HostId } from '@routed/core';
+import { HostId } from '../../core/dist/index.js';
 import { HostAdapter, AdapterStatus, AdapterInstallResult, AdapterUninstallResult } from './types.js';
 import { AntigravityAdapter } from './hosts/antigravity.js';
 import { ClaudeCodeAdapter } from './hosts/claude-code.js';

@@ -1,4 +1,4 @@
-import { ScanResult } from '@routed/core';
+import { ScanResult } from '../../../core/dist/index.js';
 export interface ScanOptions {
     workspace?: string;
     json?: boolean;

@@ -1,0 +1,1 @@
+{"version":3,"file":"uninstall.d.ts","sourceRoot":"","sources":["../../src/commands/uninstall.ts"],"names":[],"mappings":"AAEA,MAAM,WAAW,gBAAgB;IAC7B,MAAM,CAAC,EAAE,OAAO,CAAC;IACjB,IAAI,CAAC,EAAE,OAAO,CAAC;CAClB;AACD,wBAAsB,mBAAmB,CAAC,OAAO,GAAE,gBAAqB,GAAG,OAAO,CAAC,IAAI,CAAC,CAsCvF"}

@@ -1,4 +1,4 @@
-import { RoutedDatabase, SemanticEngine, detectEnvironments, SkillWatcher } from '@routed/core';
+import { RoutedDatabase, SemanticEngine, detectEnvironments, SkillWatcher } from '../../../core/dist/index.js';
 export interface WatchOptions {
     quiet?: boolean;
 }

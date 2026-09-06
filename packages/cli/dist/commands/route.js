@@ -1,4 +1,4 @@
-import { RoutedDatabase, HybridRouter } from '@routed/core';
+import { RoutedDatabase, HybridRouter } from '../../../core/dist/index.js';
 import { runScan } from './scan.js';
 export async function runRoute(options) {
     const db = new RoutedDatabase();
@@ -13,7 +13,7 @@ export async function runRoute(options) {
     const router = new HybridRouter(skills, db);
     const result = await router.route(options.prompt, {
         explain: options.explain,
-        topK: options.topK ?? 3,
+        topK: options.topK,
         threshold: options.threshold ?? 0.20,
     });
     if (options.json) {

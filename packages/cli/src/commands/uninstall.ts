@@ -1,5 +1,5 @@
-import { RoutedUninstaller } from '@routed/core';
-import { AdapterRegistry } from '@routed/adapters';
+import { RoutedUninstaller } from '../../../core/dist/index.js';
+import { AdapterRegistry } from '../../../adapters/dist/index.js';
 export interface UninstallOptions {
     dryRun?: boolean;
     json?: boolean;

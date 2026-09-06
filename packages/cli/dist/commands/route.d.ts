@@ -1,4 +1,4 @@
-import { RouteResult } from '@routed/core';
+import { RouteResult } from '../../../core/dist/index.js';
 export interface RouteCommandOptions {
     prompt: string;
     explain?: boolean;

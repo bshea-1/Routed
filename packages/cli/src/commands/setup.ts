@@ -1,6 +1,6 @@
 import readline from 'node:readline';
-import { detectEnvironments, SkillScanner, RoutedDatabase, SemanticEngine, getPaths, } from '@routed/core';
-import { AdapterRegistry } from '@routed/adapters';
+import { detectEnvironments, SkillScanner, RoutedDatabase, SemanticEngine, getPaths, } from '../../../core/dist/index.js';
+import { AdapterRegistry } from '../../../adapters/dist/index.js';
 import fs from 'node:fs';
 function promptUser(query: string): Promise<string> {
     const rl = readline.createInterface({

@@ -1,4 +1,4 @@
-import { RoutedDatabase, SemanticEngine, detectEnvironments, SkillScanner } from '@routed/core';
+import { RoutedDatabase, SemanticEngine, detectEnvironments, SkillScanner } from '../../../core/dist/index.js';
 export interface ReindexOptions {
     force?: boolean;
     json?: boolean;

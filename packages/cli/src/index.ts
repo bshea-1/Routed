@@ -12,7 +12,8 @@ import { runFeedbackCommand } from './commands/feedback.js';
 import { runSetupCommand } from './commands/setup.js';
 import { runMcpServer } from './commands/mcp.js';
 import { runOllamaCommand } from './commands/ollama.js';
-export const VERSION = '1.1.0';
+import { runUpdateCommand } from './commands/update.js';
+export const VERSION = '1.2.0';
 export async function main(args: string[]): Promise<void> {
     const command = args[0];
     if (!command || command === 'help' || command === '--help' || command === '-h') {
@@ -170,6 +171,14 @@ export async function main(args: string[]): Promise<void> {
             await runOllamaCommand({ subcommand: sub, prompt, model });
             break;
         }
+        case 'update':
+        case 'upgrade': {
+            const check = args.includes('--check') || args.includes('-c');
+            const yes = args.includes('--yes') || args.includes('-y');
+            const json = args.includes('--json');
+            await runUpdateCommand({ check, yes, json });
+            break;
+        }
         default:
             console.error(`Unknown command: ${command}`);
             printHelp();
@@ -185,6 +194,7 @@ Usage:
 
 Commands:
   setup               Interactive 4-screen setup wizard (auto-detects & installs)
+  update              Check for updates and automatically upgrade Routed (--check to inspect)
   mcp                 Start Model Context Protocol (MCP) server for LM Studio, Cursor, Claude
   ollama <subcommand> Ollama tool schemas, Modelfiles, and direct route integration
   route "<prompt>"    Find the best matching Agent Skill(s) for a prompt

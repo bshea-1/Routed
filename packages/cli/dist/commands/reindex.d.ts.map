@@ -1,0 +1,1 @@
+{"version":3,"file":"reindex.d.ts","sourceRoot":"","sources":["../../src/commands/reindex.ts"],"names":[],"mappings":"AACA,MAAM,WAAW,cAAc;IAC3B,KAAK,CAAC,EAAE,OAAO,CAAC;IAChB,IAAI,CAAC,EAAE,OAAO,CAAC;CAClB;AACD,wBAAsB,UAAU,CAAC,OAAO,GAAE,cAAmB,GAAG,OAAO,CAAC,IAAI,CAAC,CA8C5E"}

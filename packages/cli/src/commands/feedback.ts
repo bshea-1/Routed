@@ -1,4 +1,4 @@
-import { LearningStore } from '@routed/core';
+import { LearningStore } from '../../../core/dist/index.js';
 export interface FeedbackOptions {
     record?: string;
     skill?: string;

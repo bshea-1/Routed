@@ -1,4 +1,4 @@
-import { RoutedDatabase, detectEnvironments, getPaths, SemanticEngine } from '@routed/core';
+import { RoutedDatabase, detectEnvironments, getPaths, SemanticEngine } from '../../../core/dist/index.js';
 export function runStatus(options = {}) {
     const paths = getPaths();
     const db = new RoutedDatabase();

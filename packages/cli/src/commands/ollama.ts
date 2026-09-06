@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { HybridRouter, RoutedDatabase } from '@routed/core';
+import { HybridRouter, RoutedDatabase } from '../../../core/dist/index.js';
 
 export interface OllamaCommandOptions {
     subcommand?: string;

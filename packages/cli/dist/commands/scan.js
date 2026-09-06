@@ -1,4 +1,4 @@
-import { detectEnvironments, SkillScanner, RoutedDatabase, ensureDataDirectories } from '@routed/core';
+import { detectEnvironments, SkillScanner, RoutedDatabase, ensureDataDirectories } from '../../../core/dist/index.js';
 export function runScan(options = {}) {
     const startTime = performance.now();
     ensureDataDirectories();

@@ -1,4 +1,4 @@
-import { RoutedDatabase, HybridRouter, runBenchmark, BenchmarkMetrics } from '@routed/core';
+import { RoutedDatabase, HybridRouter, runBenchmark, BenchmarkMetrics } from '../../../core/dist/index.js';
 export interface BenchmarkCommandOptions {
     json?: boolean;
 }

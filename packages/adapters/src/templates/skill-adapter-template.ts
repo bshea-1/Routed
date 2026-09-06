@@ -1,4 +1,4 @@
-import { HostId } from '@routed/core';
+import { HostId } from '../../../core/dist/index.js';
 
 export function generateRouteSkillContent(hostId: HostId, hostName: string): string {
     return `---

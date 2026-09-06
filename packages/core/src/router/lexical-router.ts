@@ -40,9 +40,10 @@ export class LexicalRouter {
         const startTime = performance.now();
         const threshold = options.threshold ?? 0.18;
         const multiSkillThreshold = options.multiSkillThreshold ?? 0.30;
-        const topK = options.topK ?? 3;
         const allowNoSkill = options.allowNoSkill ?? true;
         const trimmedQuery = query.trim();
+        const clauses = extractSubClauses(trimmedQuery);
+        const topK = options.topK ?? (clauses.length > 1 ? Math.min(10, Math.max(5, clauses.length * 2)) : 5);
 
         if (allowNoSkill) {
             for (const pattern of TRIVIAL_PROMPT_PATTERNS) {
@@ -67,7 +68,6 @@ export class LexicalRouter {
             }
         }
 
-        const clauses = extractSubClauses(trimmedQuery);
         const candidateMap = new Map<string, ScoredSkill>();
         const clauseTopMatches: ScoredSkill[] = [];
 

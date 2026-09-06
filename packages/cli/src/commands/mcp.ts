@@ -1,8 +1,8 @@
-import { McpServer } from '@routed/core';
+import { McpServer } from '../../../core/dist/index.js';
 
 export async function runMcpServer(): Promise<void> {
     const server = new McpServer({
-        version: '1.1.0',
+        version: '1.2.0',
     });
     server.startStdio();
 }

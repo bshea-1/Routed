@@ -1,4 +1,4 @@
-import { HostId, SkillMetadata } from '@routed/core';
+import { HostId, SkillMetadata } from '../../../core/dist/index.js';
 import { ResolvedSkill } from '../types.js';
 export interface LogicalSkillGroup {
     normalizedName: string;
