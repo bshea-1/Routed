@@ -181,6 +181,7 @@ routed doctor
 | **Continue.dev** | `~/.continue/config.json` | Supported | Local IDE tool provider for Ollama and LM Studio |
 | **OpenCode** | `~/.opencode/skills/route/SKILL.md` | Supported | Local skill loader and interactive prompts |
 | **Codex** | `.agents/skills/route/SKILL.md` | Supported | Universal Agentic Skill schema |
+| **HOL Guard** | Local agent harness command protection | Supported | Pre-action safety extension (`command.routed`) |
 
 ---
 
@@ -229,6 +230,9 @@ Route a prompt and get ready-to-inject instructions:
 ```bash
 routed hermes route "refactor auth service"
 ```
+
+### Agent Harness Safety with HOL Guard
+Routed integrates directly with [HOL Guard](https://github.com/hashgraph-online/hol-guard) (`command.routed`) to ensure safe automated execution inside agent harnesses. HOL Guard intercepts and flags state-modifying operations (`routed doctor --fix`, `routed adapters install`, `routed adapters uninstall`, and `routed update`) for pre-action human review, while allowing routine routing (`routed route`), diagnostics (`routed doctor`), and update checks (`routed update --check`) to execute without interruption.
 
 ---
 
