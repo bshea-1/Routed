@@ -93,25 +93,25 @@ export class McpServer {
                             tools: [
                                 {
                                     name: 'route_skill',
-                                    description: 'Fast local routing engine for Agent Skills. Analyzes a prompt and returns the top matching skills with complete instructions in sub-20ms without burning LLM context window tokens.',
+                                    description: 'Route natural language prompts to matching agent skills using hybrid BM25 and dense embeddings. Behavior: Read-only local CPU execution in sub-20ms with zero LLM context tokens. Usage Guidelines: Primary entry point. Use route_skill to match task prompts against skills. Use list_skills to browse skills without a prompt, get_skill for known IDs, or scan_skills to refresh index. Parameters: prompt is the required query; topK (1-10, default 3) sets result limit; host filters environment; explain enables scoring breakdown signals.',
                                     inputSchema: {
                                         type: 'object',
                                         properties: {
                                             prompt: {
                                                 type: 'string',
-                                                description: 'The user prompt or task description to route.',
+                                                description: 'The natural language user prompt, coding task, or question to route to relevant skills (required, non-empty string).',
                                             },
                                             topK: {
                                                 type: 'number',
-                                                description: 'Maximum number of skills to return (default: 3).',
+                                                description: 'Maximum number of top-matching skills to return. Valid integer range: 1 to 10 (default: 3).',
                                             },
                                             host: {
                                                 type: 'string',
-                                                description: 'Optional host environment filter (e.g. antigravity, cursor, claude-code, lmstudio, ollama).',
+                                                description: 'Optional host environment filter to restrict matches to a specific AI tool (e.g. cursor, antigravity, claude-code, gemini-cli, hermes, codegate, openclaw, openmanus, lmstudio, ollama).',
                                             },
                                             explain: {
                                                 type: 'boolean',
-                                                description: 'Include scoring breakdown and matched signals.',
+                                                description: 'When true, includes scoring breakdown signals (exact match score, BM25 lexical score, vector semantic similarity). Default: false.',
                                             },
                                         },
                                         required: ['prompt'],
@@ -119,13 +119,13 @@ export class McpServer {
                                 },
                                 {
                                     name: 'get_skill',
-                                    description: 'Retrieve full markdown instructions and manifest for a specific skill by name or ID.',
+                                    description: 'Retrieve full markdown instructions and manifest for a skill by ID or name. Behavior: Read-only disk read; errors if not found. Usage Guidelines: Use when skill ID or name is already known (e.g. from route_skill or list_skills). Use route_skill to search by prompt intent. Parameters: id matches exact skill ID first, then falls back to case-insensitive name.',
                                     inputSchema: {
                                         type: 'object',
                                         properties: {
                                             id: {
                                                 type: 'string',
-                                                description: 'The unique skill ID or skill name.',
+                                                description: 'The unique skill ID (e.g. "git-commit-helper") or exact skill name. Case-insensitive lookup (required).',
                                             },
                                         },
                                         required: ['id'],
@@ -133,47 +133,47 @@ export class McpServer {
                                 },
                                 {
                                     name: 'list_skills',
-                                    description: 'List all locally indexed agent skills across environments.',
+                                    description: 'List and filter all locally indexed agent skills from SQLite. Behavior: Read-only, sub-millisecond query with zero side effects. Usage Guidelines: Use to browse available skills without a prompt. Use scan_skills to refresh index after adding or editing skill files, route_skill to match prompts, or get_skill for specific skill instructions. Parameters: filter (substring search) and host (tool environment) combine as an AND filter. Returns all skills when omitted.',
                                     inputSchema: {
                                         type: 'object',
                                         properties: {
                                             filter: {
                                                 type: 'string',
-                                                description: 'Optional filter query across names, descriptions, and tags.',
+                                                description: 'Optional substring query matched case-insensitively across skill names, descriptions, and tags.',
                                             },
                                             host: {
                                                 type: 'string',
-                                                description: 'Optional host environment filter.',
+                                                description: 'Optional host environment filter to restrict results to a specific tool (e.g. cursor, antigravity, claude-code, gemini-cli, hermes, codegate, openclaw, openmanus, lmstudio, ollama).',
                                             },
                                         },
                                     },
                                 },
                                 {
                                     name: 'scan_skills',
-                                    description: 'Scan local directories across detected AI coding tools and rebuild the hybrid index.',
+                                    description: 'Scan filesystem directories across detected AI coding tools and rebuild the local SQLite index. Behavior: Synchronizes SQLite index in-place from disk in <100ms. Read-only on source skill files. Usage Guidelines: Use to refresh index after adding or editing skill files. Use route_skill or list_skills for querying. Parameters: workspace specifies an absolute directory to include workspace-local skills; scans all global tool paths when omitted.',
                                     inputSchema: {
                                         type: 'object',
                                         properties: {
                                             workspace: {
                                                 type: 'string',
-                                                description: 'Optional workspace directory path to scan.',
+                                                description: 'Optional absolute directory path of a custom workspace to scan. If omitted, scans all standard global and workspace skill directories for detected host tools.',
                                             },
                                         },
                                     },
                                 },
                                 {
                                     name: 'record_feedback',
-                                    description: 'Record user routing feedback to fine-tune local scoring weights and learn local synonyms.',
+                                    description: 'Record user routing corrections to refine scoring weights and learn prompt-to-skill synonyms. Behavior: Local SQLite update in <5ms. Idempotent. Usage Guidelines: Use after route_skill when a user approves or corrects a skill route. Parameters: query is the routed prompt; chosenSkillId is the correct skill identifier.',
                                     inputSchema: {
                                         type: 'object',
                                         properties: {
                                             query: {
                                                 type: 'string',
-                                                description: 'The prompt query that was routed.',
+                                                description: 'The original natural language prompt or task query that was routed by route_skill (required, non-empty string).',
                                             },
                                             chosenSkillId: {
                                                 type: 'string',
-                                                description: 'The correct skill ID.',
+                                                description: 'The unique skill ID or skill name that correctly handles the query (required, non-empty string).',
                                             },
                                         },
                                         required: ['query', 'chosenSkillId'],

@@ -1,0 +1,1 @@
+{"version":3,"file":"hermes.d.ts","sourceRoot":"","sources":["../../src/commands/hermes.ts"],"names":[],"mappings":"AAGA,MAAM,WAAW,oBAAoB;IACjC,UAAU,CAAC,EAAE,MAAM,CAAC;IACpB,MAAM,CAAC,EAAE,MAAM,CAAC;IAChB,MAAM,CAAC,EAAE,MAAM,GAAG,KAAK,CAAC;CAC3B;AAED,wBAAsB,gBAAgB,CAAC,OAAO,EAAE,oBAAoB,GAAG,OAAO,CAAC,IAAI,CAAC,CAwHnF"}
