@@ -43,5 +43,8 @@
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.0.0",
     "typescript": "^5.7.0"
+  },
+  "overrides": {
+    "adm-zip": "^0.6.0"
   }
 }
