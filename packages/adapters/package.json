@@ -1,7 +1,7 @@
 {
   "name": "@routed/adapters",
-  "version": "1.3.0",
-  "description": "Routed Host Adapters for AI Coding Environments",
+  "version": "1.3.1",
+  "description": "Routed Host Adapters for Claude Code, Cursor, Antigravity, OpenCode, and Codex",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -10,7 +10,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@routed/core": "^1.3.0"
+    "@routed/core": "^1.3.1"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

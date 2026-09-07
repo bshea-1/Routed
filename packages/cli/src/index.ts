@@ -14,7 +14,7 @@ import { runMcpServer } from './commands/mcp.js';
 import { runOllamaCommand } from './commands/ollama.js';
 import { runHermesCommand } from './commands/hermes.js';
 import { runUpdateCommand } from './commands/update.js';
-export const VERSION = '1.3.0';
+export const VERSION = '1.3.1';
 export async function main(args: string[]): Promise<void> {
     const command = args[0];
     if (!command || command === 'help' || command === '--help' || command === '-h') {
