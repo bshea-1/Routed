@@ -14,10 +14,10 @@ export interface HybridScorerConfig {
     metadataWeight: number;
 }
 export const DEFAULT_WEIGHTS: HybridScorerConfig = {
-    semanticWeight: 0.50,
-    lexicalWeight: 0.35,
+    semanticWeight: 0.45,
+    lexicalWeight: 0.45,
     exactWeight: 0.10,
-    metadataWeight: 0.05,
+    metadataWeight: 0.00,
 };
 export class HybridScorer {
     private config: HybridScorerConfig;
@@ -28,6 +28,9 @@ export class HybridScorer {
             exactWeight: options.exactWeight ?? DEFAULT_WEIGHTS.exactWeight,
             metadataWeight: options.metadataWeight ?? DEFAULT_WEIGHTS.metadataWeight,
         };
+    }
+    public getConfig(): HybridScorerConfig {
+        return { ...this.config };
     }
     public computeScore(skill: SkillMetadata, components: ScoreComponents, options: RouteOptions = {}): ScoredSkill {
         let sw = options.semanticWeight ?? this.config.semanticWeight;

@@ -14,7 +14,8 @@ import { runMcpServer } from './commands/mcp.js';
 import { runOllamaCommand } from './commands/ollama.js';
 import { runHermesCommand } from './commands/hermes.js';
 import { runUpdateCommand } from './commands/update.js';
-export const VERSION = '1.3.1';
+import { runTuneCommand } from './commands/tune.js';
+export const VERSION = '1.5.0';
 export async function main(args) {
     const command = args[0];
     if (!command || command === 'help' || command === '--help' || command === '-h') {
@@ -144,9 +145,77 @@ export async function main(args) {
             await runUninstallCommand({ dryRun, json });
             break;
         }
+        case 'tune':
+        case 'grid-search': {
+            const flags = args.slice(1);
+            let folds;
+            let gridStep;
+            let metric;
+            let dataset;
+            let coarseToFine = true;
+            let apply = false;
+            let reset = false;
+            let json = false;
+            for (let i = 0; i < flags.length; i++) {
+                const flag = flags[i];
+                if (flag === '--folds' && flags[i + 1]) {
+                    folds = parseInt(flags[++i], 10);
+                }
+                else if (flag === '--grid-step' && flags[i + 1]) {
+                    gridStep = parseFloat(flags[++i]);
+                }
+                else if (flag === '--metric' && flags[i + 1]) {
+                    metric = flags[++i];
+                }
+                else if (flag === '--dataset' && flags[i + 1]) {
+                    dataset = flags[++i];
+                }
+                else if (flag === '--apply') {
+                    apply = true;
+                }
+                else if (flag === '--reset') {
+                    reset = true;
+                }
+                else if (flag === '--no-coarse-to-fine') {
+                    coarseToFine = false;
+                }
+                else if (flag === '--json') {
+                    json = true;
+                }
+            }
+            await runTuneCommand({ folds, gridStep, metric, dataset, coarseToFine, apply, reset, json });
+            break;
+        }
         case 'benchmark': {
-            const json = args.includes('--json');
-            await runBenchmarkCommand({ json });
+            const flags = args.slice(1);
+            let dataset;
+            let weights;
+            let kFold;
+            let gridSearch = false;
+            let apply = false;
+            let json = false;
+            for (let i = 0; i < flags.length; i++) {
+                const flag = flags[i];
+                if (flag === '--dataset' && flags[i + 1]) {
+                    dataset = flags[++i];
+                }
+                else if (flag === '--weights' && flags[i + 1]) {
+                    weights = flags[++i];
+                }
+                else if (flag === '--k-fold' && flags[i + 1]) {
+                    kFold = parseInt(flags[++i], 10);
+                }
+                else if (flag === '--grid-search') {
+                    gridSearch = true;
+                }
+                else if (flag === '--apply') {
+                    apply = true;
+                }
+                else if (flag === '--json') {
+                    json = true;
+                }
+            }
+            await runBenchmarkCommand({ dataset, weights, kFold, gridSearch, apply, json });
             break;
         }
         case 'setup':
@@ -214,6 +283,7 @@ Commands:
   reindex             Incrementally re-index and re-embed installed skills
   watch               Continuously monitor skill directories for changes
   feedback            Manage local routing preferences and corrections
+  tune                Run parameter grid search and K-fold CV to optimize scoring weights
   uninstall           Safely uninstall Routed and remove adapters (--dry-run available)
   status              Display current system status and detected environments
   benchmark           Run routing benchmark suite and measure accuracy & latency
@@ -225,6 +295,15 @@ Options:
   --fix               Attempt auto-repair for detected issues (for 'doctor')
   --force             Force complete re-indexing and re-embedding (for 'reindex')
   --dry-run           Simulate uninstallation without modifying files (for 'uninstall')
+  --folds <n>         Number of stratified cross-validation folds (for 'tune', default 5)
+  --grid-step <n>     Step size for parameter grid search (for 'tune', default 0.05)
+  --metric <name>     Optimization metric: composite, top1, top3, mrr, f1 (default composite)
+  --apply             Persist optimal empirical weights to SQLite database (for 'tune')
+  --reset             Reset scoring weights to factory baseline (for 'tune')
+  --dataset <path>    Specify custom benchmark dataset JSON file (for 'tune' or 'benchmark')
+  --weights <w>       Test custom weights "<sem>,<lex>,<exact>,<meta>" (for 'benchmark')
+  --k-fold <n>        Run K-fold cross validation from benchmark (for 'benchmark')
+  --grid-search       Run parameter grid search from benchmark (for 'benchmark')
   --json              Output results in JSON format
   --workspace <path>  Specify a custom workspace path for 'scan'
   --filter <term>     Filter skills by name or keyword
@@ -232,6 +311,8 @@ Options:
 
 Examples:
   routed route "debug memory leaks in node"
+  routed tune --folds 5 --apply
+  routed benchmark --weights "0.45,0.40,0.10,0.05"
   routed doctor --fix
   routed adapters install
   routed reindex

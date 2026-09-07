@@ -6,7 +6,7 @@ import { SemanticEngine } from '../semantic/semantic-engine.js';
 import { detectEnvironments } from '../discovery/detector.js';
 export interface DoctorCheck {
     id: string;
-    category: 'system' | 'database' | 'model' | 'adapters' | 'environments';
+    category: 'system' | 'database' | 'model' | 'adapters' | 'environments' | 'routing';
     name: string;
     status: 'ok' | 'warn' | 'error';
     message: string;
@@ -121,6 +121,43 @@ export class RoutedDoctor {
                 message: 'No supported AI coding environments detected in standard locations.',
             });
         }
+
+        const customWeights = this.db.getRoutingWeights();
+        if (customWeights) {
+            const sum = customWeights.semanticWeight + customWeights.lexicalWeight + customWeights.exactWeight + customWeights.metadataWeight;
+            const isValid = Math.abs(sum - 1.0) < 0.02 &&
+                customWeights.semanticWeight >= 0 &&
+                customWeights.lexicalWeight >= 0 &&
+                customWeights.exactWeight >= 0 &&
+                customWeights.metadataWeight >= 0;
+            if (isValid) {
+                checks.push({
+                    id: 'routing-weights',
+                    category: 'routing',
+                    name: 'Routing Scoring Weights',
+                    status: 'ok',
+                    message: `Empirically tuned weights active (Sem: ${Math.round(customWeights.semanticWeight * 100)}%, BM25: ${Math.round(customWeights.lexicalWeight * 100)}%, Exact: ${Math.round(customWeights.exactWeight * 100)}%, Meta: ${Math.round(customWeights.metadataWeight * 100)}%).`,
+                });
+            } else {
+                checks.push({
+                    id: 'routing-weights',
+                    category: 'routing',
+                    name: 'Routing Scoring Weights',
+                    status: 'warn',
+                    message: `Tuned weights sum to ${(sum * 100).toFixed(1)}% (expected ~100%). Resetting to baseline recommended.`,
+                    fixable: true,
+                });
+            }
+        } else {
+            checks.push({
+                id: 'routing-weights',
+                category: 'routing',
+                name: 'Routing Scoring Weights',
+                status: 'ok',
+                message: 'Standard empirical baseline active (Sem: 50%, BM25: 35%, Exact: 10%, Meta: 5%).',
+            });
+        }
+
         const allOk = checks.every((c) => c.status !== 'error');
         return {
             timestamp: new Date().toISOString(),
@@ -146,6 +183,10 @@ export class RoutedDoctor {
                     else if (check.id === 'database-integrity') {
                         this.db.setMeta('schema_version', '2');
                         repaired.push('Re-initialized database schema');
+                    }
+                    else if (check.id === 'routing-weights') {
+                        this.db.clearRoutingWeights();
+                        repaired.push('Reset routing weights to standard empirical baseline');
                     }
                 }
                 catch (err) {

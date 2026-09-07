@@ -2,7 +2,7 @@ import { RoutedDatabase } from '../storage/database.js';
 import { SemanticEngine } from '../semantic/semantic-engine.js';
 export interface DoctorCheck {
     id: string;
-    category: 'system' | 'database' | 'model' | 'adapters' | 'environments';
+    category: 'system' | 'database' | 'model' | 'adapters' | 'environments' | 'routing';
     name: string;
     status: 'ok' | 'warn' | 'error';
     message: string;

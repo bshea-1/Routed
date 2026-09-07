@@ -1,8 +1,8 @@
 export const DEFAULT_WEIGHTS = {
-    semanticWeight: 0.50,
-    lexicalWeight: 0.35,
+    semanticWeight: 0.45,
+    lexicalWeight: 0.45,
     exactWeight: 0.10,
-    metadataWeight: 0.05,
+    metadataWeight: 0.00,
 };
 export class HybridScorer {
     config;
@@ -13,6 +13,9 @@ export class HybridScorer {
             exactWeight: options.exactWeight ?? DEFAULT_WEIGHTS.exactWeight,
             metadataWeight: options.metadataWeight ?? DEFAULT_WEIGHTS.metadataWeight,
         };
+    }
+    getConfig() {
+        return { ...this.config };
     }
     computeScore(skill, components, options = {}) {
         let sw = options.semanticWeight ?? this.config.semanticWeight;

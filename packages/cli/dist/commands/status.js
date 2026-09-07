@@ -7,10 +7,28 @@ export function runStatus(options = {}) {
     const environments = detectEnvironments();
     const lastScan = db.getMeta('last_scan_time');
     const semanticEngine = new SemanticEngine();
+    const customWeights = db.getRoutingWeights();
+    const tuneReport = db.getLatestTuneReport();
+    let engineDesc = 'Hybrid Pipeline (Semantic 50% + BM25 35% + Exact 10% + Adaptive History 5-25%) [Factory Baseline]';
+    if (customWeights) {
+        const s = Math.round(customWeights.semanticWeight * 100);
+        const b = Math.round(customWeights.lexicalWeight * 100);
+        const e = Math.round(customWeights.exactWeight * 100);
+        const m = Math.round(customWeights.metadataWeight * 100);
+        const oofText = tuneReport ? ` | ${tuneReport.crossValidation.meanValAccuracy.toFixed(1)}% OOF CV` : '';
+        engineDesc = `Hybrid Pipeline (Semantic ${s}% + BM25 ${b}% + Exact ${e}% + Meta ${m}%)${oofText} [Tuned via Grid Search]`;
+    }
     const statusData = {
         router: 'Ready',
         semanticModel: semanticEngine.getModelName(),
-        engine: 'Hybrid Pipeline (Semantic 50% + BM25 35% + Exact 10% + Adaptive History 5-25%)',
+        engine: engineDesc,
+        scoringWeights: customWeights || {
+            semanticWeight: 0.50,
+            lexicalWeight: 0.35,
+            exactWeight: 0.10,
+            metadataWeight: 0.05,
+        },
+        tuningSource: customWeights ? 'grid-search-cross-validation' : 'factory-baseline',
         skillsIndexed: skills.length,
         embeddingsComputed: embeddings.length,
         databasePath: paths.databasePath,

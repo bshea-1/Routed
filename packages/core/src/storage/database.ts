@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { getPaths, ensureDataDirectories } from '../config/paths.js';
-import { HostEnvironment, SkillMetadata, SkillEmbedding } from '../types.js';
+import { HostEnvironment, SkillMetadata, SkillEmbedding, HybridScorerWeights, TuneReport } from '../types.js';
 const require = createRequire(import.meta.url);
 interface SqliteDatabase {
     exec(sql: string): void;
@@ -144,6 +144,46 @@ export class RoutedDatabase {
             return row ? row.value : null;
         }
         return this.jsonStore.meta[key] || null;
+    }
+    public getRoutingWeights(): HybridScorerWeights | null {
+        const raw = this.getMeta('routing_weights_json');
+        if (!raw) return null;
+        try {
+            const parsed = JSON.parse(raw);
+            if (
+                typeof parsed.semanticWeight === 'number' &&
+                typeof parsed.lexicalWeight === 'number' &&
+                typeof parsed.exactWeight === 'number' &&
+                typeof parsed.metadataWeight === 'number'
+            ) {
+                return parsed;
+            }
+        } catch {}
+        return null;
+    }
+    public setRoutingWeights(weights: HybridScorerWeights, metadata?: Record<string, unknown>): void {
+        this.setMeta('routing_weights_json', JSON.stringify(weights));
+        if (metadata) {
+            this.setMeta('routing_weights_meta_json', JSON.stringify(metadata));
+        }
+        this.setMeta('routing_weights_updated_at', new Date().toISOString());
+    }
+    public clearRoutingWeights(): void {
+        this.setMeta('routing_weights_json', '');
+        this.setMeta('routing_weights_meta_json', '');
+        this.setMeta('routing_weights_updated_at', '');
+    }
+    public saveTuneReport(report: TuneReport): void {
+        this.setMeta('latest_tune_report_json', JSON.stringify(report));
+    }
+    public getLatestTuneReport(): TuneReport | null {
+        const raw = this.getMeta('latest_tune_report_json');
+        if (!raw) return null;
+        try {
+            return JSON.parse(raw) as TuneReport;
+        } catch {
+            return null;
+        }
     }
     public upsertSkill(skill: SkillMetadata): void {
         if (this.db) {

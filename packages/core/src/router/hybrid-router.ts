@@ -32,15 +32,24 @@ export class HybridRouter {
     private learningStore?: LearningStore;
     private skills: SkillMetadata[] = [];
 
-    constructor(skills: SkillMetadata[] = [], db?: RoutedDatabase, semantic?: SemanticEngine, learningStore?: LearningStore) {
-        this.bm25 = new BM25Engine();
-        this.scorer = new HybridScorer();
+    constructor(skills: SkillMetadata[] = [], db?: RoutedDatabase, semantic?: SemanticEngine, learningStore?: LearningStore, scorer?: HybridScorer) {
         this.db = db || new RoutedDatabase();
+        const activeWeights = this.db.getRoutingWeights();
+        this.scorer = scorer || new HybridScorer(activeWeights || undefined);
+        this.bm25 = new BM25Engine();
         this.semantic = semantic || new SemanticEngine();
         this.learningStore = learningStore || new LearningStore();
         if (skills.length > 0) {
             this.updateSkills(skills);
         }
+    }
+
+    public getScorer(): HybridScorer {
+        return this.scorer;
+    }
+
+    public getDatabase(): RoutedDatabase {
+        return this.db;
     }
 
     public updateSkills(skills: SkillMetadata[]): void {

@@ -1,0 +1,1 @@
+{"version":3,"file":"dataset.d.ts","sourceRoot":"","sources":["../../src/benchmark/dataset.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,aAAa,EAAE,MAAM,aAAa,CAAC;AAE5C,eAAO,MAAM,gCAAgC,EAAE,aAAa,EAwoB3D,CAAC;AAEF,wBAAgB,oBAAoB,CAAC,QAAQ,CAAC,EAAE,MAAM,GAAG,aAAa,EAAE,CAmBvE;AAED,wBAAgB,oBAAoB,CAAC,QAAQ,EAAE,MAAM,EAAE,KAAK,EAAE,aAAa,EAAE,GAAG,IAAI,CAEnF"}

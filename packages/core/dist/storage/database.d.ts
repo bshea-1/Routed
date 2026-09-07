@@ -1,4 +1,4 @@
-import { HostEnvironment, SkillMetadata, SkillEmbedding } from '../types.js';
+import { HostEnvironment, SkillMetadata, SkillEmbedding, HybridScorerWeights, TuneReport } from '../types.js';
 export declare class RoutedDatabase {
     private db;
     private dbPath;
@@ -11,6 +11,11 @@ export declare class RoutedDatabase {
     private saveJsonFallback;
     setMeta(key: string, value: string): void;
     getMeta(key: string): string | null;
+    getRoutingWeights(): HybridScorerWeights | null;
+    setRoutingWeights(weights: HybridScorerWeights, metadata?: Record<string, unknown>): void;
+    clearRoutingWeights(): void;
+    saveTuneReport(report: TuneReport): void;
+    getLatestTuneReport(): TuneReport | null;
     upsertSkill(skill: SkillMetadata): void;
     getAllSkills(): SkillMetadata[];
     getSkillByPath(filePath: string): SkillMetadata | null;

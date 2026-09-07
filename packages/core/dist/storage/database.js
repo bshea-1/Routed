@@ -118,6 +118,48 @@ export class RoutedDatabase {
         }
         return this.jsonStore.meta[key] || null;
     }
+    getRoutingWeights() {
+        const raw = this.getMeta('routing_weights_json');
+        if (!raw)
+            return null;
+        try {
+            const parsed = JSON.parse(raw);
+            if (typeof parsed.semanticWeight === 'number' &&
+                typeof parsed.lexicalWeight === 'number' &&
+                typeof parsed.exactWeight === 'number' &&
+                typeof parsed.metadataWeight === 'number') {
+                return parsed;
+            }
+        }
+        catch { }
+        return null;
+    }
+    setRoutingWeights(weights, metadata) {
+        this.setMeta('routing_weights_json', JSON.stringify(weights));
+        if (metadata) {
+            this.setMeta('routing_weights_meta_json', JSON.stringify(metadata));
+        }
+        this.setMeta('routing_weights_updated_at', new Date().toISOString());
+    }
+    clearRoutingWeights() {
+        this.setMeta('routing_weights_json', '');
+        this.setMeta('routing_weights_meta_json', '');
+        this.setMeta('routing_weights_updated_at', '');
+    }
+    saveTuneReport(report) {
+        this.setMeta('latest_tune_report_json', JSON.stringify(report));
+    }
+    getLatestTuneReport() {
+        const raw = this.getMeta('latest_tune_report_json');
+        if (!raw)
+            return null;
+        try {
+            return JSON.parse(raw);
+        }
+        catch {
+            return null;
+        }
+    }
     upsertSkill(skill) {
         if (this.db) {
             const stmt = this.db.prepare(`

@@ -17,6 +17,7 @@ export declare const DEFAULT_WEIGHTS: HybridScorerConfig;
 export declare class HybridScorer {
     private config;
     constructor(options?: Partial<HybridScorerConfig>);
+    getConfig(): HybridScorerConfig;
     computeScore(skill: SkillMetadata, components: ScoreComponents, options?: RouteOptions): ScoredSkill;
     calculateConfidence(candidates: ScoredSkill[]): ScoredSkill[];
 }

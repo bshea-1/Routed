@@ -1,160 +1,60 @@
 import { HybridRouter } from '../router/hybrid-router.js';
-import { RoutedDatabase } from '../storage/database.js';
-import { SkillMetadata } from '../types.js';
-export interface BenchmarkCase {
-    id: string;
-    category: 'exact-match' | 'synonym' | 'technical-jargon' | 'abbreviation' | 'indirect-intent' | 'multi-skill' | 'no-skill' | 'irrelevant-trap' | 'multilingual';
-    prompt: string;
-    expectedSkills: string[];
-    description: string;
+import { BenchmarkCase, BenchmarkMetrics, HybridScorerWeights } from '../types.js';
+import { REPRESENTATIVE_BENCHMARK_DATASET } from './dataset.js';
+
+export { BenchmarkCase, BenchmarkMetrics } from '../types.js';
+export { REPRESENTATIVE_BENCHMARK_DATASET } from './dataset.js';
+
+export const BENCHMARK_CASES: BenchmarkCase[] = REPRESENTATIVE_BENCHMARK_DATASET;
+
+export interface RunBenchmarkOptions {
+    weights?: HybridScorerWeights;
+    threshold?: number;
+    topK?: number;
+    allowNoSkill?: boolean;
 }
-export interface BenchmarkMetrics {
-    totalCases: number;
-    top1Accuracy: number;
-    top3Recall: number;
-    noSkillAccuracy: number;
-    meanLatencyMs: number;
-    medianLatencyMs: number;
-    passedCount: number;
-    failedCount: number;
-    results: Array<{
-        id: string;
-        prompt: string;
-        category: string;
-        expected: string[];
-        actual: string[];
-        isTop1Match: boolean;
-        isTop3Match: boolean;
-        latencyMs: number;
-    }>;
-}
-export const BENCHMARK_CASES: BenchmarkCase[] = [
-    {
-        id: 'exact-1',
-        category: 'exact-match',
-        prompt: 'a11y-debugging',
-        expectedSkills: ['a11y-debugging'],
-        description: 'Exact skill name invocation',
-    },
-    {
-        id: 'exact-2',
-        category: 'exact-match',
-        prompt: 'memory-leak-debugging in node',
-        expectedSkills: ['memory-leak-debugging'],
-        description: 'Direct skill name with runtime qualifier',
-    },
-    {
-        id: 'synonym-1',
-        category: 'synonym',
-        prompt: 'inspect and resolve high RAM consumption and garbage collection spikes in nodejs',
-        expectedSkills: ['memory-leak-debugging'],
-        description: 'Synonyms for memory leak (RAM consumption, GC spikes)',
-    },
-    {
-        id: 'synonym-2',
-        category: 'synonym',
-        prompt: 'audit tap targets, contrast ratios, and screen reader labels on our web page',
-        expectedSkills: ['a11y-debugging'],
-        description: 'Detailed accessibility criteria without saying a11y',
-    },
-    {
-        id: 'jargon-1',
-        category: 'technical-jargon',
-        prompt: 'analyze LCP bottlenecks and Core Web Vitals breakdown for our landing page',
-        expectedSkills: ['debug-optimize-lcp'],
-        description: 'LCP and Core Web Vitals technical jargon',
-    },
-    {
-        id: 'jargon-2',
-        category: 'technical-jargon',
-        prompt: 'evaluate Firestore security rules and check access control boundaries',
-        expectedSkills: ['firebase-security-rules-auditor'],
-        description: 'Firestore security rules audit',
-    },
-    {
-        id: 'abbrev-1',
-        category: 'abbreviation',
-        prompt: 'check a11y compliance',
-        expectedSkills: ['a11y-debugging'],
-        description: 'Common abbreviation a11y',
-    },
-    {
-        id: 'abbrev-2',
-        category: 'abbreviation',
-        prompt: 'fix OOM crashes in our backend service',
-        expectedSkills: ['memory-leak-debugging'],
-        description: 'OOM (Out of Memory) abbreviation',
-    },
-    {
-        id: 'multi-de-1',
-        category: 'multilingual',
-        prompt: 'Speicherleck in node debuggen',
-        expectedSkills: ['memory-leak-debugging'],
-        description: 'German compound noun Speicherleck for memory-leak-debugging',
-    },
-    {
-        id: 'multi-de-2',
-        category: 'multilingual',
-        prompt: 'Sicherheitsrichtlinien und Firestore Zugriffsregeln prüfen',
-        expectedSkills: ['firebase-security-rules-auditor'],
-        description: 'German security rules audit for Firestore',
-    },
-    {
-        id: 'multi-es-1',
-        category: 'multilingual',
-        prompt: 'encontrar y depurar fugas de memoria en nodejs',
-        expectedSkills: ['memory-leak-debugging'],
-        description: 'Spanish memory leak debugging prompt',
-    },
-    {
-        id: 'multi-fr-1',
-        category: 'multilingual',
-        prompt: 'optimiser le Largest Contentful Paint et Core Web Vitals',
-        expectedSkills: ['debug-optimize-lcp'],
-        description: 'French Core Web Vitals optimization prompt',
-    },
-    {
-        id: 'intent-1',
-        category: 'indirect-intent',
-        prompt: 'why does our frontend take 4 seconds before the hero image is visible?',
-        expectedSkills: ['debug-optimize-lcp'],
-        description: 'Indirect symptom of Largest Contentful Paint delay',
-    },
-    {
-        id: 'noskill-1',
-        category: 'no-skill',
-        prompt: 'rename variable totalAmount to grandTotal',
-        expectedSkills: [],
-        description: 'Simple code rename not requiring a specialized skill',
-    },
-    {
-        id: 'noskill-2',
-        category: 'no-skill',
-        prompt: 'hello, how are you today?',
-        expectedSkills: [],
-        description: 'Conversational prompt without coding task',
-    },
-    {
-        id: 'noskill-3',
-        category: 'no-skill',
-        prompt: 'fix spelling typo in README.md line 12',
-        expectedSkills: [],
-        description: 'Trivial typo edit',
-    },
-];
-export async function runBenchmark(router: HybridRouter, customCases: BenchmarkCase[] = BENCHMARK_CASES): Promise<BenchmarkMetrics> {
+
+export async function runBenchmark(
+    router: HybridRouter,
+    customCases: BenchmarkCase[] = BENCHMARK_CASES,
+    options: RunBenchmarkOptions = {}
+): Promise<BenchmarkMetrics> {
     const results: BenchmarkMetrics['results'] = [];
     const latencies: number[] = [];
     let top1Matches = 0;
     let top3Matches = 0;
+    let top5Matches = 0;
+    let sumReciprocalRank = 0;
     let noSkillMatches = 0;
     let noSkillCases = 0;
+
+    const categoryStats: Record<string, { total: number; passed: number }> = {};
+
+    const routeOpts = {
+        allowNoSkill: options.allowNoSkill ?? true,
+        topK: options.topK ?? 5,
+        threshold: options.threshold,
+        semanticWeight: options.weights?.semanticWeight,
+        lexicalWeight: options.weights?.lexicalWeight,
+        exactWeight: options.weights?.exactWeight,
+        metadataWeight: options.weights?.metadataWeight,
+    };
+
     for (const tc of customCases) {
+        if (!categoryStats[tc.category]) {
+            categoryStats[tc.category] = { total: 0, passed: 0 };
+        }
+        categoryStats[tc.category].total++;
+
         const t0 = performance.now();
-        const routeRes = await router.route(tc.prompt, { allowNoSkill: true, topK: 3 });
+        const routeRes = await router.route(tc.prompt, routeOpts);
         const latency = performance.now() - t0;
         latencies.push(latency);
+
         const actual = routeRes.selectedSkills.map((s) => s.skill.name);
+        const normActual = actual.map((a) => a.toLowerCase());
+        const normExpected = tc.expectedSkills.map((e) => e.toLowerCase());
+
         if (tc.expectedSkills.length === 0) {
             noSkillCases++;
             const isCorrect = routeRes.isNoSkill || actual.length === 0;
@@ -162,6 +62,9 @@ export async function runBenchmark(router: HybridRouter, customCases: BenchmarkC
                 noSkillMatches++;
                 top1Matches++;
                 top3Matches++;
+                top5Matches++;
+                sumReciprocalRank += 1.0;
+                categoryStats[tc.category].passed++;
             }
             results.push({
                 id: tc.id,
@@ -173,14 +76,31 @@ export async function runBenchmark(router: HybridRouter, customCases: BenchmarkC
                 isTop3Match: isCorrect,
                 latencyMs: Math.round(latency * 10) / 10,
             });
-        }
-        else {
-            const top1Match = actual.length > 0 && tc.expectedSkills.includes(actual[0]);
-            const top3Match = actual.some((a) => tc.expectedSkills.includes(a));
-            if (top1Match)
+        } else {
+            let rr = 0;
+            let top1Match = false;
+            let top3Match = false;
+            let top5Match = false;
+
+            for (let rank = 0; rank < normActual.length; rank++) {
+                const actName = normActual[rank];
+                if (normExpected.includes(actName)) {
+                    rr = 1.0 / (rank + 1);
+                    if (rank === 0) top1Match = true;
+                    if (rank < 3) top3Match = true;
+                    if (rank < 5) top5Match = true;
+                    break;
+                }
+            }
+
+            if (top1Match) {
                 top1Matches++;
-            if (top3Match)
-                top3Matches++;
+                categoryStats[tc.category].passed++;
+            }
+            if (top3Match) top3Matches++;
+            if (top5Match) top5Matches++;
+            sumReciprocalRank += rr;
+
             results.push({
                 id: tc.id,
                 prompt: tc.prompt,
@@ -193,19 +113,47 @@ export async function runBenchmark(router: HybridRouter, customCases: BenchmarkC
             });
         }
     }
+
     latencies.sort((a, b) => a - b);
     const total = customCases.length;
+    const top1Accuracy = total > 0 ? (top1Matches / total) * 100 : 0;
+    const top3Recall = total > 0 ? (top3Matches / total) * 100 : 0;
+    const top5Recall = total > 0 ? (top5Matches / total) * 100 : 0;
+    const mrr = total > 0 ? (sumReciprocalRank / total) * 100 : 0;
+    const noSkillAccuracy = noSkillCases > 0 ? (noSkillMatches / noSkillCases) * 100 : 100;
+    const compositeScore =
+        0.40 * top1Accuracy +
+        0.25 * top3Recall +
+        0.15 * mrr +
+        0.20 * noSkillAccuracy;
+
     const meanLatency = latencies.reduce((a, b) => a + b, 0) / (latencies.length || 1);
     const medianLatency = latencies.length > 0 ? latencies[Math.floor(latencies.length / 2)] : 0;
+
+    const categoryBreakdown: Record<string, { total: number; passed: number; accuracy: number }> = {};
+    for (const [cat, stat] of Object.entries(categoryStats)) {
+        categoryBreakdown[cat] = {
+            total: stat.total,
+            passed: stat.passed,
+            accuracy: Math.round((stat.passed / (stat.total || 1)) * 1000) / 10,
+        };
+    }
+
     return {
         totalCases: total,
-        top1Accuracy: Math.round((top1Matches / total) * 1000) / 10,
-        top3Recall: Math.round((top3Matches / total) * 1000) / 10,
-        noSkillAccuracy: noSkillCases > 0 ? Math.round((noSkillMatches / noSkillCases) * 1000) / 10 : 100,
+        top1Accuracy: Math.round(top1Accuracy * 10) / 10,
+        top3Recall: Math.round(top3Recall * 10) / 10,
+        top5Recall: Math.round(top5Recall * 10) / 10,
+        mrr: Math.round(mrr * 10) / 10,
+        noSkillAccuracy: Math.round(noSkillAccuracy * 10) / 10,
+        noSkillCases,
+        noSkillMatches,
+        compositeScore: Math.round(compositeScore * 10) / 10,
         meanLatencyMs: Math.round(meanLatency * 10) / 10,
         medianLatencyMs: Math.round(medianLatency * 10) / 10,
         passedCount: top1Matches,
         failedCount: total - top1Matches,
+        categoryBreakdown,
         results,
     };
 }
