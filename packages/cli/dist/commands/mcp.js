@@ -1,7 +1,8 @@
 import { McpServer } from '../../../core/dist/index.js';
+import { VERSION } from '../index.js';
 export async function runMcpServer() {
     const server = new McpServer({
-        version: '1.2.0',
+        version: VERSION,
     });
     server.startStdio();
 }
