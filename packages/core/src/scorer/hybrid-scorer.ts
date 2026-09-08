@@ -6,6 +6,9 @@ export interface ScoreComponents {
     metadataSignal: number;
     rawBm25Score: number;
     matchedTokens: string[];
+    directTokens?: string[];
+    expandedTokens?: string[];
+    frameworkPenalty?: number;
 }
 export interface HybridScorerConfig {
     semanticWeight: number;
@@ -37,6 +40,7 @@ export class HybridScorer {
         const lw = options.lexicalWeight ?? this.config.lexicalWeight;
         const ew = options.exactWeight ?? this.config.exactWeight;
         let mw = options.metadataWeight ?? this.config.metadataWeight;
+        const frameworkPenalty = components.frameworkPenalty ?? 0.0;
 
         // If metadata/history weight is dynamically boosted beyond baseline 0.05 (up to 0.25),
         // smoothly absorb the delta from semantic weight while keeping lexical and exact baselines steady.
@@ -46,6 +50,7 @@ export class HybridScorer {
         }
 
         if (components.exactOrAlias >= 0.90) {
+            const score = Math.max(0, components.exactOrAlias - frameworkPenalty);
             const signals: RouteSignals = {
                 exactMatch: components.exactOrAlias,
                 aliasMatch: components.exactOrAlias,
@@ -54,18 +59,22 @@ export class HybridScorer {
                 semanticScore: components.semanticSimilarity,
                 metadataScore: components.metadataSignal,
                 matchedTokens: components.matchedTokens,
+                directTokens: components.directTokens,
+                expandedTokens: components.expandedTokens,
+                frameworkPenalty,
             };
             return {
                 skill,
-                score: components.exactOrAlias,
-                confidence: components.exactOrAlias,
+                score,
+                confidence: score,
                 signals,
             };
         }
         const rawScore = components.semanticSimilarity * sw +
             components.lexicalSimilarity * lw +
             components.exactOrAlias * ew +
-            components.metadataSignal * mw;
+            components.metadataSignal * mw -
+            frameworkPenalty;
         const finalScore = Math.min(1.0, Math.max(0, rawScore));
         const roundedScore = Math.round(finalScore * 1000) / 1000;
         const signals: RouteSignals = {
@@ -76,6 +85,9 @@ export class HybridScorer {
             semanticScore: components.semanticSimilarity,
             metadataScore: components.metadataSignal,
             matchedTokens: components.matchedTokens,
+            directTokens: components.directTokens,
+            expandedTokens: components.expandedTokens,
+            frameworkPenalty,
         };
         return {
             skill,

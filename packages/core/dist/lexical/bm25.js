@@ -1,4 +1,4 @@
-import { tokenize } from './tokenizer.js';
+import { tokenize, tokenizeWithProvenance } from './tokenizer.js';
 export class BM25Engine {
     k1;
     b;
@@ -65,7 +65,7 @@ export class BM25Engine {
         }
     }
     search(query) {
-        const queryTokens = tokenize(query, { minLength: 2 });
+        const { tokens: queryTokens, directTokens, expandedTokens } = tokenizeWithProvenance(query, { minLength: 2 });
         if (queryTokens.length === 0 || this.documents.length === 0) {
             return [];
         }
@@ -73,11 +73,11 @@ export class BM25Engine {
         let maxRawScore = 0;
         for (const doc of this.documents) {
             let score = 0;
-            const matched = [];
+            const matchedSet = new Set();
             for (const token of queryTokens) {
                 const tf = doc.allWeightedTokens.get(token) || 0;
                 if (tf > 0) {
-                    matched.push(token);
+                    matchedSet.add(token);
                     const idf = this.idfCache.get(token) || 0.1;
                     const numerator = tf * (this.k1 + 1);
                     const denominator = tf + this.k1 * (1 - this.b + this.b * (doc.totalTokens / (this.avgDocLength || 1)));
@@ -87,7 +87,10 @@ export class BM25Engine {
             if (score > 0) {
                 if (score > maxRawScore)
                     maxRawScore = score;
-                results.push({ doc, rawScore: score, matchedTokens: matched });
+                const matchedTokens = Array.from(matchedSet);
+                const directMatchedTokens = matchedTokens.filter(t => directTokens.includes(t));
+                const expandedMatchedTokens = matchedTokens.filter(t => expandedTokens.includes(t));
+                results.push({ doc, rawScore: score, matchedTokens, directMatchedTokens, expandedMatchedTokens });
             }
         }
         return results
@@ -98,6 +101,8 @@ export class BM25Engine {
                 rawScore: r.rawScore,
                 normalizedScore: normalized,
                 matchedTokens: r.matchedTokens,
+                directMatchedTokens: r.directMatchedTokens,
+                expandedMatchedTokens: r.expandedMatchedTokens,
             };
         })
             .sort((a, b) => b.rawScore - a.rawScore);

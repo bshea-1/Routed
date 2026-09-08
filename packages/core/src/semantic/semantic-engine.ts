@@ -98,7 +98,8 @@ export class SemanticEngine {
         let reusedCount = 0;
         for (const skill of skills) {
             const existing = db.getEmbedding(skill.id);
-            if (existing && existing.fileHash === skill.fileHash && existing.modelName === this.modelName) {
+            const isFallback = existing && existing.vector.filter((x: number) => x === 0).length > 20;
+            if (existing && !isFallback && existing.fileHash === skill.fileHash && existing.modelName === this.modelName) {
                 reusedCount++;
                 continue;
             }
@@ -139,7 +140,10 @@ export class SemanticEngine {
                 db.upsertEmbedding(emb);
                 embMap.set(skill.id, emb);
             }
-            const sim = cosineSimilarity(queryVector, emb.vector, true);
+            const rawSim = cosineSimilarity(queryVector, emb.vector, true);
+            const sim = this.modelName.includes('e5')
+                ? Math.max(0, Math.min(1.0, (rawSim - 0.70) / 0.25))
+                : rawSim;
             results.push({ skill, similarity: sim });
         }
         return results.sort((a, b) => b.similarity - a.similarity);

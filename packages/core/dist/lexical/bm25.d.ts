@@ -14,6 +14,8 @@ export interface BM25ScoreResult {
     rawScore: number;
     normalizedScore: number;
     matchedTokens: string[];
+    directMatchedTokens?: string[];
+    expandedMatchedTokens?: string[];
 }
 export declare class BM25Engine {
     private k1;

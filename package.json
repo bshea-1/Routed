@@ -1,6 +1,6 @@
 {
   "name": "routed",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Universal local router for Agent Skills across AI coding environments",
   "main": "packages/core/dist/index.js",
   "type": "module",

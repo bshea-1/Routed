@@ -14,7 +14,7 @@ export async function runRoute(options) {
     const result = await router.route(options.prompt, {
         explain: options.explain,
         topK: options.topK,
-        threshold: options.threshold ?? 0.20,
+        threshold: options.threshold,
     });
     if (options.json) {
         console.log(JSON.stringify(result, null, 2));
@@ -45,8 +45,17 @@ export async function runRoute(options) {
             console.log(`  Lexical (BM25):       ${cand.signals.bm25Score.toFixed(2)} (raw: ${cand.signals.rawBm25Score.toFixed(2)})`);
             console.log(`  Exact Match:          ${cand.signals.exactMatch > 0 ? cand.signals.exactMatch.toFixed(2) : 'no'}`);
             console.log(`  Alias Match:          ${cand.signals.aliasMatch > 0 ? cand.signals.aliasMatch.toFixed(2) : 'no'}`);
-            if (cand.signals.matchedTokens.length > 0) {
+            if (cand.signals.directTokens && cand.signals.directTokens.length > 0) {
+                console.log(`  Direct Query Tokens:  ${cand.signals.directTokens.join(', ')}`);
+            }
+            if (cand.signals.expandedTokens && cand.signals.expandedTokens.length > 0) {
+                console.log(`  Expanded Synonyms:    ${cand.signals.expandedTokens.join(', ')}`);
+            }
+            else if (cand.signals.matchedTokens.length > 0 && (!cand.signals.directTokens || cand.signals.directTokens.length === 0)) {
                 console.log(`  Matched Tokens:       ${cand.signals.matchedTokens.join(', ')}`);
+            }
+            if (cand.signals.frameworkPenalty && cand.signals.frameworkPenalty > 0) {
+                console.log(`  Framework Penalty:    -${cand.signals.frameworkPenalty.toFixed(2)} (unmentioned framework specialization)`);
             }
             if (cand.signals.historyBonus && cand.signals.historyBonus > 0) {
                 console.log(`  Adaptive History:     +${cand.signals.historyBonus.toFixed(2)} (decayed count: ${cand.signals.decayedCount?.toFixed(1) ?? '1.0'})`);

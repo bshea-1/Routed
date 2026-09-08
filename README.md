@@ -4,7 +4,7 @@
 
 **The Universal Local Router for Agent Skills**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20Routed%20Online-blue?style=for-the-badge&logo=vercel)](https://routed-demo.vercel.app/) [![Latest Release](https://img.shields.io/badge/Release-v1.5.0-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation) [![Glama Score](https://glama.ai/mcp/servers/bshea-1/Routed/badges/score.svg)](https://glama.ai/mcp/servers/bshea-1/Routed) [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20Routed%20Online-blue?style=for-the-badge&logo=vercel)](https://routed-demo.vercel.app/) [![Latest Release](https://img.shields.io/badge/Release-v1.6.0-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation) [![Glama Score](https://glama.ai/mcp/servers/bshea-1/Routed/badges/score.svg)](https://glama.ai/mcp/servers/bshea-1/Routed) [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 </div>
 
@@ -38,6 +38,8 @@ Routed is a **universal, local, zero-token router** for Agent Skills across AI c
 - **Zero Token Cost**: Eliminates costly LLM routing calls (saving 1,000+ prompt tokens per interaction).
 - **Sub-20ms Latency**: Local CPU-evaluated hybrid search responds instantly without network roundtrips.
 - **Empirical Hyperparameter Tuning**: Zero magic numbers. Built-in parameter grid search and Stratified 5-Fold Cross-Validation (`routed tune`) empirically optimize scoring weights with a proven 2.6% generalization gap.
+- **Adversarial Precision Floor**: Grounded semantic gating and calibrated 0.35 confidence floor guarantee zero false activations on gibberish or non-coding prompts.
+- **Negation Intent and Framework Penalty**: Automatically isolates positive intent, suppresses negated skills, and penalizes unprompted framework specializations.
 - **Model Context Protocol (MCP) Server**: Run Routed via `routed mcp` to eliminate context pollution in LM Studio, Cursor, Claude Desktop, Windsurf, and Continue.
 - **Native Multilingual Understanding**: Understands German, Spanish, French, Japanese, and 100+ languages natively, automatically handling compound words without language switches.
 - **Native Auto-Updater**: Automatic version checks and seamless in-place upgrades via `routed update`.

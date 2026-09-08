@@ -59,40 +59,54 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'fuite': ['leak'],
     'sécurité': ['security'],
 };
-export function tokenize(text: string, options: {
+export interface TokenizeProvenance {
+    tokens: string[];
+    directTokens: string[];
+    expandedTokens: string[];
+}
+
+export function tokenizeWithProvenance(text: string, options: {
     removeStopWords?: boolean;
     minLength?: number;
     expandSynonyms?: boolean;
-} = {}): string[] {
+} = {}): TokenizeProvenance {
     const removeStopWords = options.removeStopWords ?? true;
     const minLength = options.minLength ?? 2;
     const expandSynonyms = options.expandSynonyms ?? true;
     if (!text || typeof text !== 'string')
-        return [];
+        return { tokens: [], directTokens: [], expandedTokens: [] };
     const cleaned = text
         .toLowerCase()
         .replace(/[^\p{L}\p{N}\s-]/gu, ' ')
         .replace(/[-_]/g, ' ');
     const rawTokens = cleaned.split(/\s+/).filter(Boolean);
-    const tokens: string[] = [];
+    const directTokens: string[] = [];
+    const expandedTokens: string[] = [];
+    const allTokensSet = new Set<string>();
+
     for (const token of rawTokens) {
         if (token.length < minLength)
             continue;
         if (removeStopWords && STOP_WORDS.has(token))
             continue;
-        tokens.push(token);
+        if (!allTokensSet.has(token)) {
+            allTokensSet.add(token);
+            directTokens.push(token);
+        }
 
         // Automatic compound word decomposition for long technical words
         if (token.length > 7) {
             for (const [rootKey, syns] of Object.entries(TECHNICAL_SYNONYMS)) {
                 if (token.includes(rootKey) && token !== rootKey) {
-                    if (!tokens.includes(rootKey)) {
-                        tokens.push(rootKey);
+                    if (!allTokensSet.has(rootKey)) {
+                        allTokensSet.add(rootKey);
+                        expandedTokens.push(rootKey);
                     }
                     if (expandSynonyms) {
                         for (const syn of syns) {
-                            if (!tokens.includes(syn)) {
-                                tokens.push(syn);
+                            if (!allTokensSet.has(syn)) {
+                                allTokensSet.add(syn);
+                                expandedTokens.push(syn);
                             }
                         }
                     }
@@ -102,13 +116,51 @@ export function tokenize(text: string, options: {
 
         if (expandSynonyms && Array.isArray(TECHNICAL_SYNONYMS[token])) {
             for (const syn of TECHNICAL_SYNONYMS[token]) {
-                if (!tokens.includes(syn)) {
-                    tokens.push(syn);
+                if (!allTokensSet.has(syn)) {
+                    allTokensSet.add(syn);
+                    expandedTokens.push(syn);
                 }
             }
         }
     }
-    return tokens;
+    return {
+        tokens: Array.from(allTokensSet),
+        directTokens,
+        expandedTokens,
+    };
+}
+
+export function tokenize(text: string, options: {
+    removeStopWords?: boolean;
+    minLength?: number;
+    expandSynonyms?: boolean;
+} = {}): string[] {
+    return tokenizeWithProvenance(text, options).tokens;
+}
+
+export interface NegationResult {
+    positiveQuery: string;
+    negatedTokens: string[];
+}
+
+export function parseNegation(query: string): NegationResult {
+    const negationRegex = /\b(?:do\s+not|don'?t|never|avoid|without|skip|no\s+need\s+to)\s+([^,.;]+?)(?:,\s*|;\s*|\.\s*|but\s+|instead\s+|just\s+|$)/gi;
+    const negatedTokens = new Set<string>();
+    let match: RegExpExecArray | null;
+    while ((match = negationRegex.exec(query)) !== null) {
+        const negatedPhrase = match[1];
+        const tokens = tokenize(negatedPhrase, { minLength: 2, removeStopWords: true, expandSynonyms: false });
+        for (const t of tokens) {
+            negatedTokens.add(t);
+        }
+    }
+
+    const positiveQuery = query.replace(/\b(?:do\s+not|don'?t|never|avoid|without|skip|no\s+need\s+to)\s+[^,.;]+(?:,\s*|;\s*|\.\s*|but\s+|instead\s+|just\s+|$)/gi, ' ').trim();
+
+    return {
+        positiveQuery: positiveQuery || query,
+        negatedTokens: Array.from(negatedTokens),
+    };
 }
 export function generateNGrams(tokens: string[], n = 2): string[] {
     if (tokens.length < n)

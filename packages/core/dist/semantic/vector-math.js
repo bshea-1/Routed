@@ -28,14 +28,14 @@ export function cosineSimilarity(a, b, isPreNormalized = false) {
         return 0;
     if (isPreNormalized) {
         const dot = dotProduct(a, b);
-        return Math.max(0, Math.min(1.0, (dot + 1) / 2));
+        return Math.max(0, Math.min(1.0, dot));
     }
     const magA = magnitude(a);
     const magB = magnitude(b);
     if (magA === 0 || magB === 0)
         return 0;
     const rawCos = dotProduct(a, b) / (magA * magB);
-    return Math.max(0, Math.min(1.0, (rawCos + 1) / 2));
+    return Math.max(0, Math.min(1.0, rawCos));
 }
 export function meanPooling(embeddings, attentionMask) {
     if (embeddings.length === 0)

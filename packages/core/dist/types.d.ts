@@ -30,6 +30,9 @@ export interface RouteSignals {
     semanticScore: number;
     metadataScore: number;
     matchedTokens: string[];
+    directTokens?: string[];
+    expandedTokens?: string[];
+    frameworkPenalty?: number;
     historyBonus?: number;
     decayedCount?: number;
 }

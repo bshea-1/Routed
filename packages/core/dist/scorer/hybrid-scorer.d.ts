@@ -6,6 +6,9 @@ export interface ScoreComponents {
     metadataSignal: number;
     rawBm25Score: number;
     matchedTokens: string[];
+    directTokens?: string[];
+    expandedTokens?: string[];
+    frameworkPenalty?: number;
 }
 export interface HybridScorerConfig {
     semanticWeight: number;
