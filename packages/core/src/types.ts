@@ -106,6 +106,8 @@ export type BenchmarkCategory =
     | 'multi-skill'
     | 'no-skill'
     | 'domain-specific'
+    | 'boundary-task'
+    | 'adversarial-trap'
     | 'irrelevant-trap'
     | string;
 
@@ -128,6 +130,11 @@ export interface EvaluationMetrics {
     noSkillAccuracy: number;
     noSkillCases: number;
     noSkillMatches: number;
+    falseAcceptRate: number;
+    falseDeclineRate: number;
+    falseAccepts: number;
+    falseDeclines: number;
+    positiveCases: number;
     compositeScore: number;
     meanLatencyMs: number;
     medianLatencyMs: number;

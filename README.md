@@ -4,7 +4,7 @@
 
 **The Universal Local Router for Agent Skills**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20Routed%20Online-blue?style=for-the-badge&logo=vercel)](https://routed-demo.vercel.app/) [![Latest Release](https://img.shields.io/badge/Release-v1.6.0-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation) [![Glama Score](https://glama.ai/mcp/servers/bshea-1/Routed/badges/score.svg)](https://glama.ai/mcp/servers/bshea-1/Routed) [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20Routed%20Online-blue?style=for-the-badge&logo=vercel)](https://routed-demo.vercel.app/) [![Latest Release](https://img.shields.io/badge/Release-v1.6.5-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation) [![Glama Score](https://glama.ai/mcp/servers/bshea-1/Routed/badges/score.svg)](https://glama.ai/mcp/servers/bshea-1/Routed) [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 </div>
 
@@ -102,6 +102,53 @@ To ensure scoring weights generalize robustly to unseen prompts rather than over
 | **No-Skill Precision** | 40.0% | **40.0%** (strict threshold) | Eliminates false activations |
 
 Tuned weights are persisted directly in the local SQLite `index.db`. All subsequent `routed route` operations automatically execute with the empirical weights. You can reset to baseline at any time with `routed tune --reset`.
+
+## Dual Evaluation Framework (FAR vs FDR)
+
+Routed evaluates router reliability using dual opposing boundary metrics across 190 evaluation cases (including 50 subtle boundary programming queries and 50 adversarial traps):
+
+- **False Accept Rate (FAR)**: Percentage of no-skill prompts (nonsense strings, recipes, general conversation, or negated skills) that mistakenly trigger a skill. Lower is better (**0.0%** in v1.6.5).
+- **False Decline Rate (FDR)**: Percentage of real, subtle programming requests dropped because a confidence floor was set too high. Lower is better (**1.5%** in v1.6.5).
+
+| Benchmark Metric | Result (v1.6.5) | Description |
+| :--- | :--- | :--- |
+| **Total Evaluation Cases** | **190** | 130 positive coding tasks + 60 adversarial/no-skill traps |
+| **Top-1 Accuracy** | **73.2%** (139/190) | Exact or primary skill match on rank 1 |
+| **Top-3 Recall** | **83.7%** | Relevant skill present in top 3 suggestions |
+| **Top-5 Recall** | **87.4%** | Relevant skill present in top 5 suggestions |
+| **Mean Reciprocal Rank (MRR)** | **78.8%** | Position-weighted ranking effectiveness |
+| **No-Skill Accuracy** | **100.0%** (60/60) | Clean decline on non-coding and adversarial prompts |
+| **False Accept Rate (FAR)** | **0.0%** (0/60) | Zero false activations on noise or traps |
+| **False Decline Rate (FDR)** | **1.5%** (2/130) | Valid subtle coding queries preserved |
+| **Composite Score** | **83.2** | Balanced metric weighting accuracy, recall, FAR, and FDR |
+
+### Grounded Dynamic Confidence Floor
+
+A single fixed confidence floor creates a false trade-off: raising the floor eliminates gibberish but drops real programming requests that sit near the boundary. Routed resolves this with a grounded dynamic floor:
+
+- **Anchored queries** (queries with lexical/BM25 overlap or exact tag/keyword match): evaluated with an anchored floor of **0.28**, preserving recall and minimizing False Declines.
+- **Unanchored queries** (zero lexical overlap, relying solely on dense embedding space): evaluated with a strict floor of **0.40**, suppressing noise and eliminating False Accepts.
+
+### Reproduce and Benchmark Locally
+
+The benchmark suite is open, deterministic, and runnable locally:
+
+```bash
+# Run full benchmark via CLI
+routed benchmark
+
+# Output machine-readable metrics JSON
+routed benchmark --json
+
+# Or clone the repository and run via npm
+git clone https://github.com/BrianShea/routed.git
+cd routed
+npm install
+npm run build
+npm run benchmark
+```
+
+The benchmark dataset definition is located at [`packages/core/src/benchmark/dataset.ts`](packages/core/src/benchmark/dataset.ts). Custom benchmark datasets can be evaluated using `routed benchmark --dataset <path>`.
 
 ## Comparison
 

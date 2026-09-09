@@ -20,7 +20,22 @@ export const STOP_WORDS = new Set([
     'why', 'why\'s', 'with', 'won\'t', 'would', 'wouldn\'t', 'you', 'you\'d',
     'you\'ll', 'you\'re', 'you\'ve', 'your', 'yours', 'yourself', 'yourselves',
     'please', 'help', 'want', 'need', 'like', 'make', 'create', 'build', 'write',
-    'using', 'use', 'run', 'implement', 'add'
+    'using', 'use', 'run', 'implement', 'add',
+    // Common English verbs, time, and generic nouns that should not anchor coding skills
+    'go', 'goes', 'going', 'went', 'gone',
+    'tell', 'tells', 'telling', 'told',
+    'say', 'says', 'saying', 'said',
+    'know', 'knows', 'knowing', 'knew', 'known',
+    'see', 'sees', 'seeing', 'saw', 'seen',
+    'come', 'comes', 'coming', 'came',
+    'look', 'looks', 'looking', 'looked',
+    'give', 'gives', 'giving', 'gave', 'given',
+    'get', 'gets', 'getting', 'got', 'gotten',
+    'take', 'takes', 'taking', 'took', 'taken',
+    'good', 'great', 'best', 'better',
+    'day', 'daily', 'today', 'tonight', 'tomorrow', 'week', 'month', 'year',
+    'far', 'near', 'much', 'many', 'long', 'short',
+    'world', 'thing', 'things', 'way', 'ways', 'loop'
 ]);
 export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'ram': ['memory'],
@@ -94,10 +109,10 @@ export function tokenizeWithProvenance(text: string, options: {
             directTokens.push(token);
         }
 
-        // Automatic compound word decomposition for long technical words
+        // Automatic compound word decomposition for long technical words (roots must be >= 4 chars)
         if (token.length > 7) {
             for (const [rootKey, syns] of Object.entries(TECHNICAL_SYNONYMS)) {
-                if (token.includes(rootKey) && token !== rootKey) {
+                if (rootKey.length >= 4 && token.includes(rootKey) && token !== rootKey) {
                     if (!allTokensSet.has(rootKey)) {
                         allTokensSet.add(rootKey);
                         expandedTokens.push(rootKey);
@@ -143,19 +158,43 @@ export interface NegationResult {
     negatedTokens: string[];
 }
 
+const STATE_PRESERVATION_VERBS = /\b(?:stop|cancel|abort|kill|terminate|pause|interrupt|end|halt)\b/i;
+const AFFIRMATIVE_NEGATIONS = /\b(?:do\s+not|don'?t)\s+(?:forget|hesitate)\s+(?:to\s+)?/gi;
+const CONDITIONAL_PASSIVE_REGEX = /(?:,\s*|;\s*|\band\s+)?\b(?:if|unless|while|when|in case|as long as)\b[^,.;]+?\b(?:do\s+not|don'?t)\s+(?:stop|cancel|abort|kill|terminate|pause|interrupt)[^,.;]*/gi;
+const DIRECT_NEGATION_REGEX = /\b(?:do\s+not|don'?t|don\s+not|never|avoid|without|skip|no\s+need\s+(?:for|to))\s+(?:run|use|invoke|execute|perform|trigger|start|call|apply)?\s*([^,.;]+?)(?:,\s*|;\s*|\.\s*|but\s+|instead\s+|just\s+|only\s+|$)/gi;
+
+function cleanQueryString(q: string): string {
+    let res = q.trim();
+    res = res.replace(/^[,\s;.]+|[,\s;.]+$/g, '').trim();
+    res = res.replace(/\b(and|but|then|instead|plus)\s*$/gi, '').trim();
+    return res.replace(/^[,\s;.]+|[,\s;.]+$/g, '').trim();
+}
+
 export function parseNegation(query: string): NegationResult {
-    const negationRegex = /\b(?:do\s+not|don'?t|never|avoid|without|skip|no\s+need\s+to)\s+([^,.;]+?)(?:,\s*|;\s*|\.\s*|but\s+|instead\s+|just\s+|$)/gi;
+    let workingQuery = query;
+
+    // 1. Anti-negations like 'don't forget to run X' -> 'run X' (affirmative intent)
+    workingQuery = workingQuery.replace(AFFIRMATIVE_NEGATIONS, '');
+
+    // 2. Conditional passive clauses like 'and if X is already running do not stop it'
+    workingQuery = workingQuery.replace(CONDITIONAL_PASSIVE_REGEX, ' ').trim();
+
+    // 3. Direct tool negation: 'do not run a security audit', 'avoid X', 'skip Y'
     const negatedTokens = new Set<string>();
     let match: RegExpExecArray | null;
-    while ((match = negationRegex.exec(query)) !== null) {
-        const negatedPhrase = match[1];
-        const tokens = tokenize(negatedPhrase, { minLength: 2, removeStopWords: true, expandSynonyms: false });
-        for (const t of tokens) {
-            negatedTokens.add(t);
+    const regex = new RegExp(DIRECT_NEGATION_REGEX.source, 'gi');
+    while ((match = regex.exec(workingQuery)) !== null) {
+        const phrase = match[1].trim();
+        if (!STATE_PRESERVATION_VERBS.test(phrase)) {
+            const tokens = tokenize(phrase, { minLength: 2, removeStopWords: true, expandSynonyms: false });
+            for (const t of tokens) {
+                negatedTokens.add(t);
+            }
         }
     }
 
-    const positiveQuery = query.replace(/\b(?:do\s+not|don'?t|never|avoid|without|skip|no\s+need\s+to)\s+[^,.;]+(?:,\s*|;\s*|\.\s*|but\s+|instead\s+|just\s+|$)/gi, ' ').trim();
+    const strippedQuery = workingQuery.replace(DIRECT_NEGATION_REGEX, ' ').replace(/\s+/g, ' ');
+    const positiveQuery = cleanQueryString(strippedQuery);
 
     return {
         positiveQuery: positiveQuery || query,

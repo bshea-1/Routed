@@ -1,6 +1,6 @@
 {
   "name": "@routed/adapters",
-  "version": "1.6.0",
+  "version": "1.6.5",
   "description": "Routed Host Adapters for Claude Code, Cursor, Antigravity, OpenCode, and Codex",
   "license": "MIT",
   "type": "module",
@@ -10,7 +10,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@routed/core": "^1.6.0"
+    "@routed/core": "^1.6.5"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

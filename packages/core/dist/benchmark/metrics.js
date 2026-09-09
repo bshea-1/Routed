@@ -7,6 +7,7 @@ export function evaluatePredictions(cases, predictions) {
     let sumReciprocalRank = 0;
     let noSkillCases = 0;
     let noSkillMatches = 0;
+    let falseDeclines = 0;
     const categoryStats = {};
     for (let i = 0; i < cases.length; i++) {
         const tc = cases[i];
@@ -46,6 +47,9 @@ export function evaluatePredictions(cases, predictions) {
             });
         }
         else {
+            if (actual.length === 0 || pred.isNoSkill) {
+                falseDeclines++;
+            }
             let rr = 0;
             let top1Match = false;
             let top3Match = false;
@@ -89,16 +93,21 @@ export function evaluatePredictions(cases, predictions) {
     }
     latencies.sort((a, b) => a - b);
     const total = cases.length;
+    const positiveCases = total - noSkillCases;
     const top1Accuracy = total > 0 ? (top1Matches / total) * 100 : 0;
     const top3Recall = total > 0 ? (top3Matches / total) * 100 : 0;
     const top5Recall = total > 0 ? (top5Matches / total) * 100 : 0;
     const mrr = total > 0 ? (sumReciprocalRank / total) * 100 : 0;
     const noSkillAccuracy = noSkillCases > 0 ? (noSkillMatches / noSkillCases) * 100 : 100;
-    // Composite scoring balancing precision on skill identification, ranking quality, and no-skill filtering
-    const compositeScore = 0.40 * top1Accuracy +
+    const falseAccepts = noSkillCases - noSkillMatches;
+    const falseAcceptRate = noSkillCases > 0 ? (falseAccepts / noSkillCases) * 100 : 0;
+    const falseDeclineRate = positiveCases > 0 ? (falseDeclines / positiveCases) * 100 : 0;
+    // Balanced composite score incorporating Top-1 accuracy, recall, and dual FAR/FDR penalty
+    const compositeScore = 0.35 * top1Accuracy +
         0.25 * top3Recall +
         0.15 * mrr +
-        0.20 * noSkillAccuracy;
+        0.15 * noSkillAccuracy +
+        0.10 * (100 - falseDeclineRate);
     const meanLatency = latencies.reduce((a, b) => a + b, 0) / (latencies.length || 1);
     const medianLatency = latencies.length > 0 ? latencies[Math.floor(latencies.length / 2)] : 0;
     const categoryBreakdown = {};
@@ -118,6 +127,11 @@ export function evaluatePredictions(cases, predictions) {
         noSkillAccuracy: Math.round(noSkillAccuracy * 10) / 10,
         noSkillCases,
         noSkillMatches,
+        falseAcceptRate: Math.round(falseAcceptRate * 10) / 10,
+        falseDeclineRate: Math.round(falseDeclineRate * 10) / 10,
+        falseAccepts,
+        falseDeclines,
+        positiveCases,
         compositeScore: Math.round(compositeScore * 10) / 10,
         meanLatencyMs: Math.round(meanLatency * 10) / 10,
         medianLatencyMs: Math.round(medianLatency * 10) / 10,

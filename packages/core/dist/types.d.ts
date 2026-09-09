@@ -93,7 +93,7 @@ export interface TunableParameters extends HybridScorerWeights {
     threshold?: number;
     multiSkillThreshold?: number;
 }
-export type BenchmarkCategory = 'exact-match' | 'synonym' | 'technical-jargon' | 'abbreviation' | 'indirect-intent' | 'multilingual' | 'multi-skill' | 'no-skill' | 'domain-specific' | 'irrelevant-trap' | string;
+export type BenchmarkCategory = 'exact-match' | 'synonym' | 'technical-jargon' | 'abbreviation' | 'indirect-intent' | 'multilingual' | 'multi-skill' | 'no-skill' | 'domain-specific' | 'boundary-task' | 'adversarial-trap' | 'irrelevant-trap' | string;
 export interface BenchmarkCase {
     id: string;
     category: BenchmarkCategory;
@@ -112,6 +112,11 @@ export interface EvaluationMetrics {
     noSkillAccuracy: number;
     noSkillCases: number;
     noSkillMatches: number;
+    falseAcceptRate: number;
+    falseDeclineRate: number;
+    falseAccepts: number;
+    falseDeclines: number;
+    positiveCases: number;
     compositeScore: number;
     meanLatencyMs: number;
     medianLatencyMs: number;

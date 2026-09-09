@@ -90,6 +90,9 @@ export async function runBenchmarkCommand(options: BenchmarkCommandOptions = {})
         console.log(`  • Mean Reciprocal Rank (MRR): ${metrics.mrr}%`);
     }
     console.log(`  • No-Skill Accuracy:  ${metrics.noSkillAccuracy}%`);
+    console.log(`  • False Accept Rate (FAR):  ${metrics.falseAcceptRate}% (${metrics.falseAccepts}/${metrics.noSkillCases} no-skill leaked)`);
+    console.log(`  • False Decline Rate (FDR): ${metrics.falseDeclineRate}% (${metrics.falseDeclines}/${metrics.positiveCases} positive queries dropped)`);
+    console.log(`  • Composite Score:    ${metrics.compositeScore}`);
     console.log(`  • Median Latency:     ${metrics.medianLatencyMs}ms`);
     console.log(`  • Mean Latency:       ${metrics.meanLatencyMs}ms`);
 
@@ -99,6 +102,11 @@ export async function runBenchmarkCommand(options: BenchmarkCommandOptions = {})
             console.log(`  • ${cat.padEnd(18)}: ${data.accuracy}% (${data.passed}/${data.total})`);
         }
     }
+    console.log('─────────────────────────────────────────────────────────');
+    console.log('Reproduce & Benchmark Locally:');
+    console.log('  CLI:   routed benchmark');
+    console.log('  JSON:  routed benchmark --json');
+    console.log('  Repo:  git clone https://github.com/BrianShea/routed.git && npm run benchmark');
     console.log('─────────────────────────────────────────────────────────\n');
     return metrics;
 }

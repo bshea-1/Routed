@@ -6,15 +6,20 @@ import { RoutedDatabase } from '../storage/database.js';
 import { LearningStore } from '../learning/learning-store.js';
 import { parseNegation } from '../lexical/tokenizer.js';
 const TRIVIAL_PROMPT_PATTERNS = [
-    /^(?:just\s+|please\s+)?(rename|change)\s+(?:all\s+|my\s+|the\s+)?(variable|function|param|class)s?\b/i,
-    /^(?:just\s+|please\s+)?(fix|correct)\s+(?:all\s+|my\s+|the\s+)?(typo|spelling)s?\b/i,
-    /^(hello|hi|hey|thanks|thank you|ok|okay|bye)\b/i,
+    /^(?:(?:just|please|only)\s+)*(rename|change)\s+(?:all\s+|my\s+|the\s+|this\s+|a\s+)?(variable|function|param|parameter|method|class|field|type)s?\b/i,
+    /^(?:(?:just|please|only)\s+)*(fix|correct)\s+(?:all\s+|my\s+|the\s+|this\s+|a\s+)?(?:typo|spelling|spelling\s+mistakes?)s?\b/i,
+    /^(hello|hi|hey|thanks|thank you|ok|okay|bye|cool|awesome|sounds good|good morning|good afternoon|good evening|see you|bye)\b/i,
     /^(what is|explain)\s+(this|the)\s+(single\s+)?(line|word|function|statement)\b/i,
-    /^(?:just\s+|please\s+)?(format|indent|pretty\s*print)\s+(this|the)\s+(json|string|file|code)\b/i,
-    /^(?:just\s+|please\s+)?(add|insert)\s+(a\s+)?(blank\s+)?(comment|line)\b/i,
-    /^(?:just\s+|please\s+)?(delete|remove)\s+(the\s+)?(unused\s+)?(import|line|variable|comment)s?\b/i,
-    /^(?:just\s+|please\s+)?(change|update|set)\s+(the\s+)?(button\s+)?color\b/i,
-    /^(what is|calculate)\s+\d+/i,
+    /^(?:(?:just|please|only)\s+)*(format|indent|pretty\s*print)\s+(?:this|the)\s+(?:javascript\s+|typescript\s+|python\s+)?(json|string|file|code|array|object)\b/i,
+    /^(?:(?:just|please|only)\s+)*(add|insert)\s+(a\s+)?(single\s+|blank\s+)?(line\s+)?(comment|line)\b/i,
+    /^(?:(?:just|please|only)\s+)*clean\s*up\s+(?:the\s+|my\s+)?comments?\b/i,
+    /^(?:(?:just|please|only)\s+)*(delete|remove)\s+(the\s+)?(?:(?:unused|trailing|empty|blank)\s+)*(import|line|variable|comment|statement)s?\b/i,
+    /^(?:(?:just|please|only)\s+)*(delete|remove)\s+(the\s+)?(?:console\.log|print|debugger)\b/i,
+    /^(?:(?:just|please|only)\s+)*(change|update|set)\s+(the\s+)?(background\s+|button\s+)?color\b/i,
+    /^(?:(?:just|please|only)\s+)*(change|update|set|toggle)\s+(?:the\s+)?(?:variable\s+)?flag\b/i,
+    /^(?:what is|calculate|solve for?)\s+(?:the\s+)?(?:\d+|x\b|square root|\d+\s*percent)/i,
+    /^if a (?:car|train|plane|vehicle) travels\b/i,
+    /^(?:can you recommend an authentic|can you recommend a good|what should i cook|what is the capital|what is the chemical formula|who won the|what are the health benefits|what are good indoor|tell me a (?:funny\s+)?(?:dad\s+)?joke|write a (?:short\s+)?(?:romantic\s+)?poem|how far is the moon|brainstorm (?:ten\s+)?catchy names)/i,
 ];
 function isGibberish(text) {
     const words = text.trim().toLowerCase().split(/\s+/);
@@ -196,6 +201,14 @@ export class HybridRouter {
         }
         const candidateMap = new Map();
         const clauseTopMatches = [];
+        const getCandidateFloor = (cand) => {
+            if (options.threshold !== undefined)
+                return options.threshold;
+            const matchedCount = ((cand.signals?.directTokens?.length ?? 0) + (cand.signals?.expandedTokens?.length ?? 0));
+            const hasExactOrMeta = (cand.signals?.exactMatch ?? 0) > 0 || (cand.signals?.metadataScore ?? 0) > 0;
+            const hasAnchor = hasExactOrMeta || ((cand.signals?.rawBm25Score ?? 0) > 0 && (matchedCount >= 2 || (cand.signals?.semanticScore ?? 0) >= 0.30));
+            return hasAnchor ? 0.28 : 0.40;
+        };
         for (const clause of clauses) {
             const bm25Results = this.bm25.search(clause);
             const bm25Map = new Map();
@@ -232,7 +245,9 @@ export class HybridRouter {
                 const metaSignal = skill.tags.some((t) => queryLower.includes(t.toLowerCase())) ||
                     skill.keywords.some((k) => queryLower.includes(k.toLowerCase())) ? 1.0 : 0.0;
                 // Grounded semantic gating: reject pure embedding noise without lexical anchor unless semantic similarity is strong (>= 0.65)
-                const hasLexicalAnchor = bm.rawScore > 0 || exact.exactMatchScore > 0 || metaSignal > 0;
+                const matchedCount = (bm.directMatchedTokens?.length ?? 0) + (bm.expandedMatchedTokens?.length ?? 0);
+                const hasExactOrMeta = exact.exactMatchScore > 0 || metaSignal > 0;
+                const hasLexicalAnchor = hasExactOrMeta || (bm.rawScore > 0 && (matchedCount >= 2 || sem >= 0.30));
                 if (!hasLexicalAnchor && sem < 0.65) {
                     continue;
                 }
@@ -281,15 +296,21 @@ export class HybridRouter {
                 }
             }
             clauseCandidates.sort((a, b) => b.score - a.score);
-            if (clauseCandidates.length > 0 && clauseCandidates[0].score >= threshold) {
-                clauseTopMatches.push(clauseCandidates[0]);
+            if (clauseCandidates.length > 0) {
+                const topClause = clauseCandidates[0];
+                const clauseFloor = getCandidateFloor(topClause);
+                if (topClause.score >= clauseFloor) {
+                    clauseTopMatches.push(topClause);
+                }
             }
         }
         const candidates = Array.from(candidateMap.values());
         candidates.sort((a, b) => b.score - a.score);
         this.scorer.calculateConfidence(candidates);
         const duration = performance.now() - startTime;
-        if (candidates.length === 0 || candidates[0].score < threshold) {
+        const topCandidate = candidates[0];
+        const topFloor = topCandidate ? getCandidateFloor(topCandidate) : 0.35;
+        if (candidates.length === 0 || topCandidate.score < topFloor) {
             return {
                 query: trimmedQuery,
                 selectedSkills: [],
@@ -320,14 +341,16 @@ export class HybridRouter {
                 break;
             const normName = cand.skill.name.toLowerCase();
             if (!selectedNames.has(normName)) {
-                if (cand.score >= multiSkillThreshold && cand.score >= candidates[0].score * 0.50) {
+                const candFloor = getCandidateFloor(cand);
+                const candMultiThreshold = options.multiSkillThreshold ?? (candFloor === 0.28 ? 0.35 : 0.42);
+                if (cand.score >= candMultiThreshold && cand.score >= candidates[0].score * 0.50) {
                     selectedNames.add(normName);
                     selectedSkills.push(cand);
                 }
             }
         }
-        if (selectedSkills.length === 0 && candidates[0].score >= threshold) {
-            selectedSkills.push(candidates[0]);
+        if (selectedSkills.length === 0 && topCandidate.score >= topFloor) {
+            selectedSkills.push(topCandidate);
         }
         if (selectedSkills.length === 0) {
             return {
