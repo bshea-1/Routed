@@ -11,6 +11,7 @@ import { OllamaAdapter } from './hosts/ollama.js';
 import { HermesAdapter } from './hosts/hermes.js';
 import { WindsurfAdapter } from './hosts/windsurf.js';
 import { ContinueAdapter } from './hosts/continue.js';
+import { ClineAdapter } from './hosts/cline.js';
 export class AdapterRegistry {
     private adapters = new Map<HostId, HostAdapter>();
     constructor() {
@@ -29,6 +30,7 @@ export class AdapterRegistry {
             new HermesAdapter(),
             new WindsurfAdapter(),
             new ContinueAdapter(),
+            new ClineAdapter(),
         ];
         for (const a of list) {
             this.adapters.set(a.id, a);

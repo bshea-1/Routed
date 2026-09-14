@@ -11,6 +11,7 @@ export * from './hosts/ollama.js';
 export * from './hosts/hermes.js';
 export * from './hosts/windsurf.js';
 export * from './hosts/continue.js';
+export * from './hosts/cline.js';
 export * from './deduplication/deduplicator.js';
 export * from './registry.js';
 //# sourceMappingURL=index.d.ts.map

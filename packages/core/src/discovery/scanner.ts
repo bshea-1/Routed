@@ -65,8 +65,9 @@ export class SkillScanner {
         const results: SkillMetadata[] = [];
         try {
             const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+            const allowedDotDirs = ['.agents', '.gemini', '.claude', '.cursor', '.cline', '.opencode', '.hermes', '.gemini-cli'];
             for (const entry of entries) {
-                if (entry.name.startsWith('.') && entry.name !== '.agents' && entry.name !== '.gemini' && entry.name !== '.claude') {
+                if (entry.name.startsWith('.') && !allowedDotDirs.includes(entry.name)) {
                     continue;
                 }
                 if (entry.name === 'node_modules' || entry.name === 'dist' || entry.name === 'build') {

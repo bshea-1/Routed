@@ -4,7 +4,7 @@
 
 **The Universal Local Router for Agent Skills**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20Routed%20Online-blue?style=for-the-badge&logo=vercel)](https://routed-demo.vercel.app/) [![Latest Release](https://img.shields.io/badge/Release-v1.6.5-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation) [![Glama Score](https://glama.ai/mcp/servers/bshea-1/Routed/badges/score.svg)](https://glama.ai/mcp/servers/bshea-1/Routed) [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20Routed%20Online-blue?style=for-the-badge&logo=vercel)](https://routed-demo.vercel.app/) [![Latest Release](https://img.shields.io/badge/Release-v1.6.9-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation) [![Glama Score](https://glama.ai/mcp/servers/bshea-1/Routed/badges/score.svg)](https://glama.ai/mcp/servers/bshea-1/Routed) [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 </div>
 
@@ -40,7 +40,7 @@ Routed is a **universal, local, zero-token router** for Agent Skills across AI c
 - **Empirical Hyperparameter Tuning**: Zero magic numbers. Built-in parameter grid search and Stratified 5-Fold Cross-Validation (`routed tune`) empirically optimize scoring weights with a proven 2.6% generalization gap.
 - **Adversarial Precision Floor**: Grounded semantic gating and calibrated 0.35 confidence floor guarantee zero false activations on gibberish or non-coding prompts.
 - **Negation Intent and Framework Penalty**: Automatically isolates positive intent, suppresses negated skills, and penalizes unprompted framework specializations.
-- **Model Context Protocol (MCP) Server**: Run Routed via `routed mcp` to eliminate context pollution in LM Studio, Cursor, Claude Desktop, Windsurf, and Continue.
+- **Model Context Protocol (MCP) Server**: Run Routed via `routed mcp` to eliminate context pollution in LM Studio, Cursor, Claude Desktop, Windsurf, Continue, and Cline.
 - **Native Multilingual Understanding**: Understands German, Spanish, French, Japanese, and 100+ languages natively, automatically handling compound words without language switches.
 - **Native Auto-Updater**: Automatic version checks and seamless in-place upgrades via `routed update`.
 - **Self-Healing Host Reconciliation**: Unified diagnostics and adapter repair via `routed doctor --fix`.
@@ -255,6 +255,7 @@ routed doctor
 | **Cursor** | `.cursor/rules/routed.mdc` / `mcp.json` | Supported | Rule-based prompt interception and MCP tools |
 | **Codeium Windsurf** | `~/.codeium/windsurf/mcp_config.json` | Supported | Cascade MCP tool server |
 | **Continue.dev** | `~/.continue/config.json` | Supported | Local IDE tool provider for Ollama and LM Studio |
+| **Cline** | `saoudrizwan.claude-dev/settings/cline_mcp_settings.json` / `~/.cline/skills/route/SKILL.md` | Supported | Full MCP tool server and custom rule adapter |
 | **OpenCode** | `~/.opencode/skills/route/SKILL.md` | Supported | Local skill loader and interactive prompts |
 | **Codex** | `.agents/skills/route/SKILL.md` | Supported | Universal Agentic Skill schema |
 | [**HOL Guard**](https://github.com/hashgraph-online/hol-guard) | Local agent harness command protection | Supported | [Pre-action safety extension (`command.routed`)](#agent-harness-safety-with-hol-guard) |
@@ -263,9 +264,9 @@ routed doctor
 
 ## Model Context Protocol (MCP) & Local Models
 
-Routed can be attached as a standard MCP server to any compatible host (LM Studio, Cursor, Claude Desktop, Windsurf, Continue). Instead of dumping 50+ tool schemas into your model context and exhausting VRAM, the host model only calls the `route_skill` tool. Routed evaluates the prompt on local CPU in sub-20ms and returns only the matched skill manifests.
+Routed can be attached as a standard MCP server to any compatible host (LM Studio, Cursor, Claude Desktop, Windsurf, Continue, Cline). Instead of dumping 50+ tool schemas into your model context and exhausting VRAM, the host model only calls the `route_skill` tool. Routed evaluates the prompt on local CPU in sub-20ms and returns only the matched skill manifests.
 
-### Add to Claude Desktop / Cursor / LM Studio
+### Add to Claude Desktop / Cursor / LM Studio / Cline
 Add the following snippet to your host configuration file:
 ```json
 {

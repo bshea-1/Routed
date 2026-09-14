@@ -152,6 +152,54 @@ export function detectEnvironments(workspaceRoot?: string): HostEnvironment[] {
             };
         })(),
         (() => {
+            const homeCline = path.join(home, '.cline');
+            const wsCline = path.join(cwd, '.cline');
+            const wsClineRules = path.join(cwd, '.clinerules');
+            const globalStorageCandidates = [
+                path.join(home, 'Library', 'Application Support', 'Code', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, 'Library', 'Application Support', 'Code - Insiders', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, 'Library', 'Application Support', 'Cursor', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, 'Library', 'Application Support', 'VSCodium', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, '.config', 'Code', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, '.config', 'Code - Insiders', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, '.config', 'Cursor', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, '.config', 'VSCodium', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(process.env.APPDATA || path.join(home, 'AppData', 'Roaming'), 'Code', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+            ];
+            let hasGlobalStorage = false;
+            for (const gPath of globalStorageCandidates) {
+                if (fs.existsSync(gPath)) {
+                    hasGlobalStorage = true;
+                    break;
+                }
+            }
+            const skillPaths: string[] = [];
+            const homeSkills = path.join(homeCline, 'skills');
+            const homeRules = path.join(homeCline, 'rules');
+            const homePrompts = path.join(homeCline, 'prompts');
+            const wsSkills = path.join(wsCline, 'skills');
+            const wsRules = path.join(wsCline, 'rules');
+            if (fs.existsSync(homeSkills))
+                skillPaths.push(homeSkills);
+            if (fs.existsSync(homeRules))
+                skillPaths.push(homeRules);
+            if (fs.existsSync(homePrompts))
+                skillPaths.push(homePrompts);
+            if (fs.existsSync(wsSkills))
+                skillPaths.push(wsSkills);
+            if (fs.existsSync(wsRules))
+                skillPaths.push(wsRules);
+            const exists = fs.existsSync(homeCline) || fs.existsSync(wsCline) || fs.existsSync(wsClineRules) || hasGlobalStorage;
+            return {
+                id: 'cline' as const,
+                name: 'Cline',
+                detected: exists,
+                basePath: fs.existsSync(homeCline) ? homeCline : (fs.existsSync(wsCline) ? wsCline : undefined),
+                skillPaths,
+                adapterSupported: true,
+            };
+        })(),
+        (() => {
             const localSkills = path.join(cwd, 'skills');
             const exists = fs.existsSync(localSkills);
             const skillPaths: string[] = [];
