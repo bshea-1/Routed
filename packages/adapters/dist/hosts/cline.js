@@ -43,20 +43,39 @@ export class ClineAdapter {
         const home = os.homedir();
         const paths = [];
         const editors = this.getSupportedEditorNames();
+        const extIds = ['saoudrizwan.claude-dev', 'rooveterinaryinc.roo-cline', 'cline.cline'];
+        const configNames = ['cline_mcp_settings.json', 'mcp_settings.json'];
+        const baseDirs = [];
         if (process.platform === 'darwin') {
-            const appSupport = path.join(home, 'Library', 'Application Support');
+            baseDirs.push(path.join(home, 'Library', 'Application Support'));
+        }
+        else if (process.platform === 'win32') {
+            baseDirs.push(process.env.APPDATA || path.join(home, 'AppData', 'Roaming'));
+        }
+        else {
+            baseDirs.push(process.env.XDG_CONFIG_HOME || path.join(home, '.config'));
+        }
+        for (const baseDir of baseDirs) {
             for (const ed of editors) {
-                paths.push(path.join(appSupport, ed, 'User', 'globalStorage', 'saoudrizwan.claude-dev', 'settings', 'cline_mcp_settings.json'));
+                for (const extId of extIds) {
+                    for (const cfg of configNames) {
+                        paths.push(path.join(baseDir, ed, 'User', 'globalStorage', extId, 'settings', cfg));
+                    }
+                }
             }
-            // Dynamic scan of Application Support for any saoudrizwan.claude-dev
+            // Dynamic scan of baseDir for any matching globalStorage extension
             try {
-                if (fs.existsSync(appSupport)) {
-                    const entries = fs.readdirSync(appSupport, { withFileTypes: true });
+                if (fs.existsSync(baseDir)) {
+                    const entries = fs.readdirSync(baseDir, { withFileTypes: true });
                     for (const entry of entries) {
                         if (entry.isDirectory()) {
-                            const candidate = path.join(appSupport, entry.name, 'User', 'globalStorage', 'saoudrizwan.claude-dev', 'settings', 'cline_mcp_settings.json');
-                            if (!paths.includes(candidate)) {
-                                paths.push(candidate);
+                            for (const extId of extIds) {
+                                for (const cfg of configNames) {
+                                    const candidate = path.join(baseDir, entry.name, 'User', 'globalStorage', extId, 'settings', cfg);
+                                    if (!paths.includes(candidate)) {
+                                        paths.push(candidate);
+                                    }
+                                }
                             }
                         }
                     }
@@ -64,18 +83,6 @@ export class ClineAdapter {
             }
             catch {
                 // ignore
-            }
-        }
-        else if (process.platform === 'win32') {
-            const appData = process.env.APPDATA || path.join(home, 'AppData', 'Roaming');
-            for (const ed of editors) {
-                paths.push(path.join(appData, ed, 'User', 'globalStorage', 'saoudrizwan.claude-dev', 'settings', 'cline_mcp_settings.json'));
-            }
-        }
-        else {
-            const configDir = process.env.XDG_CONFIG_HOME || path.join(home, '.config');
-            for (const ed of editors) {
-                paths.push(path.join(configDir, ed, 'User', 'globalStorage', 'saoudrizwan.claude-dev', 'settings', 'cline_mcp_settings.json'));
             }
         }
         // Standalone / workspace fallback
