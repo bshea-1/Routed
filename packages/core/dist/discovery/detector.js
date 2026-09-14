@@ -182,18 +182,24 @@ export function detectEnvironments(workspaceRoot) {
             }
             const skillPaths = [];
             const homeSkills = path.join(homeCline, 'skills');
+            const homeDataSkills = path.join(homeCline, 'data', 'skills');
             const homeRules = path.join(homeCline, 'rules');
             const homePrompts = path.join(homeCline, 'prompts');
             const wsSkills = path.join(wsCline, 'skills');
+            const wsDataSkills = path.join(wsCline, 'data', 'skills');
             const wsRules = path.join(wsCline, 'rules');
             if (fs.existsSync(homeSkills))
                 skillPaths.push(homeSkills);
+            if (fs.existsSync(homeDataSkills))
+                skillPaths.push(homeDataSkills);
             if (fs.existsSync(homeRules))
                 skillPaths.push(homeRules);
             if (fs.existsSync(homePrompts))
                 skillPaths.push(homePrompts);
             if (fs.existsSync(wsSkills))
                 skillPaths.push(wsSkills);
+            if (fs.existsSync(wsDataSkills))
+                skillPaths.push(wsDataSkills);
             if (fs.existsSync(wsRules))
                 skillPaths.push(wsRules);
             const exists = fs.existsSync(homeCline) || fs.existsSync(wsCline) || fs.existsSync(wsClineRules) || hasGlobalStorage;

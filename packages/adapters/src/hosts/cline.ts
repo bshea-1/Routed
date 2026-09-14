@@ -91,9 +91,22 @@ export class ClineAdapter implements HostAdapter {
             }
         }
 
-        // Standalone / workspace fallback
+        // Cline v4+ data/settings directory (primary global standalone)
+        paths.push(path.join(home, '.cline', 'data', 'settings', 'cline_mcp_settings.json'));
+        paths.push(path.join(home, '.cline', 'data', 'settings', 'mcp_settings.json'));
+        paths.push(path.join(home, '.cline', 'settings', 'cline_mcp_settings.json'));
+        paths.push(path.join(home, '.cline', 'settings', 'mcp_settings.json'));
         paths.push(path.join(home, '.cline', 'cline_mcp_settings.json'));
         paths.push(path.join(home, '.cline', 'mcp_settings.json'));
+        paths.push(path.join(home, 'Documents', 'Cline', 'MCP', 'cline_mcp_settings.json'));
+        paths.push(path.join(home, 'Documents', 'Cline', 'settings', 'cline_mcp_settings.json'));
+
+        // Workspace standalone
+        const cwd = process.cwd();
+        paths.push(path.join(cwd, '.cline', 'data', 'settings', 'cline_mcp_settings.json'));
+        paths.push(path.join(cwd, '.cline', 'cline_mcp_settings.json'));
+        paths.push(path.join(cwd, '.cline', 'mcp_settings.json'));
+        paths.push(path.join(cwd, '.cline', 'mcp.json'));
 
         return paths;
     }

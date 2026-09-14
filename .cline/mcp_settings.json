@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "routed": {
+      "command": "routed",
+      "args": [
+        "mcp"
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "route_skill",
+        "get_skill",
+        "list_skills"
+      ]
+    }
+  }
+}
