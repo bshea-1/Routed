@@ -155,14 +155,22 @@ export function detectEnvironments(workspaceRoot) {
             const wsCline = path.join(cwd, '.cline');
             const wsClineRules = path.join(cwd, '.clinerules');
             const globalStorageCandidates = [
+                path.join(home, 'Library', 'Application Support', 'Antigravity IDE', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, 'Library', 'Application Support', 'Antigravity', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
                 path.join(home, 'Library', 'Application Support', 'Code', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
                 path.join(home, 'Library', 'Application Support', 'Code - Insiders', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
                 path.join(home, 'Library', 'Application Support', 'Cursor', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
                 path.join(home, 'Library', 'Application Support', 'VSCodium', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, 'Library', 'Application Support', 'Windsurf', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, '.config', 'Antigravity IDE', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, '.config', 'Antigravity', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
                 path.join(home, '.config', 'Code', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
                 path.join(home, '.config', 'Code - Insiders', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
                 path.join(home, '.config', 'Cursor', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
                 path.join(home, '.config', 'VSCodium', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(home, '.config', 'Windsurf', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(process.env.APPDATA || path.join(home, 'AppData', 'Roaming'), 'Antigravity IDE', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
+                path.join(process.env.APPDATA || path.join(home, 'AppData', 'Roaming'), 'Antigravity', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
                 path.join(process.env.APPDATA || path.join(home, 'AppData', 'Roaming'), 'Code', 'User', 'globalStorage', 'saoudrizwan.claude-dev'),
             ];
             let hasGlobalStorage = false;
