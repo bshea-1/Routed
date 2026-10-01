@@ -1,4 +1,4 @@
-export type HostId = 'antigravity' | 'claude-code' | 'cursor' | 'codex' | 'gemini' | 'opencode' | 'hermes' | 'mcp' | 'lmstudio' | 'ollama' | 'windsurf' | 'continue' | 'cline' | 'custom' | string;
+export type HostId = 'antigravity' | 'claude-code' | 'cursor' | 'codex' | 'gemini' | 'opencode' | 'hermes' | 'mcp' | 'lmstudio' | 'ollama' | 'windsurf' | 'continue' | 'cline' | 'agents' | 'custom' | string;
 export interface HostEnvironment {
     id: HostId;
     name: string;

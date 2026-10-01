@@ -11,8 +11,9 @@ export function detectEnvironments(workspaceRoot?: string): HostEnvironment[] {
             const globalPlugins = path.join(home, '.gemini', 'config', 'plugins');
             const builtinSkills = path.join(home, '.gemini', 'antigravity-ide', 'builtin', 'skills');
             const workspaceAgents = path.join(cwd, '.agents', 'skills');
+            const workspaceAgentsPlugins = path.join(cwd, '.agents', 'plugins');
             const geminiDir = path.join(home, '.gemini');
-            const exists = fs.existsSync(geminiDir) || fs.existsSync(workspaceAgents);
+            const exists = fs.existsSync(geminiDir) || fs.existsSync(workspaceAgents) || fs.existsSync(workspaceAgentsPlugins);
             const skillPaths: string[] = [];
             if (fs.existsSync(globalSkills))
                 skillPaths.push(globalSkills);
@@ -22,6 +23,8 @@ export function detectEnvironments(workspaceRoot?: string): HostEnvironment[] {
                 skillPaths.push(builtinSkills);
             if (fs.existsSync(workspaceAgents))
                 skillPaths.push(workspaceAgents);
+            if (fs.existsSync(workspaceAgentsPlugins))
+                skillPaths.push(workspaceAgentsPlugins);
             return {
                 id: 'antigravity' as const,
                 name: 'Antigravity',
@@ -29,6 +32,26 @@ export function detectEnvironments(workspaceRoot?: string): HostEnvironment[] {
                 basePath: geminiDir,
                 skillPaths,
                 adapterSupported: true,
+            };
+        })(),
+        (() => {
+            const homeAgents = path.join(home, '.agents');
+            const homeSkills = path.join(homeAgents, 'skills');
+            const homePlugins = path.join(homeAgents, 'plugins');
+            const exists = fs.existsSync(homeAgents) || fs.existsSync(homeSkills) || fs.existsSync(homePlugins);
+            const skillPaths: string[] = [];
+            if (fs.existsSync(homeSkills))
+                skillPaths.push(homeSkills);
+            if (fs.existsSync(homePlugins))
+                skillPaths.push(homePlugins);
+            return {
+                id: 'agents' as const,
+                name: 'Agents User Library',
+                detected: exists,
+                basePath: homeAgents,
+                skillPaths,
+                adapterSupported: false,
+                configSource: 'builtin' as const,
             };
         })(),
         (() => {

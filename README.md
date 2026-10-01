@@ -4,7 +4,7 @@
 
 **The Universal Local Router for Agent Skills**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20Routed%20Online-blue?style=for-the-badge&logo=vercel)](https://routed-demo.vercel.app/) [![Latest Release](https://img.shields.io/badge/Release-v1.6.95-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation) [![Glama Score](https://glama.ai/mcp/servers/bshea-1/Routed/badges/score.svg)](https://glama.ai/mcp/servers/bshea-1/Routed) [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20Routed%20Online-blue?style=for-the-badge&logo=vercel)](https://routed-demo.vercel.app/) [![Latest Release](https://img.shields.io/badge/Release-v1.6.96-0969da?style=for-the-badge&logo=github)](https://github.com/bshea-1/Routed/releases) [![Platforms](https://img.shields.io/badge/Platforms-macOS%20%7C%20Linux%20%7C%20Windows-5856d6?style=for-the-badge)](#installation) [![Glama Score](https://glama.ai/mcp/servers/bshea-1/Routed/badges/score.svg)](https://glama.ai/mcp/servers/bshea-1/Routed) [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 </div>
 
@@ -258,6 +258,7 @@ routed doctor
 | **Cline** | `saoudrizwan.claude-dev/settings/cline_mcp_settings.json` / `~/.cline/skills/route/SKILL.md` | Supported | Full MCP tool server and custom rule adapter |
 | **OpenCode** | `~/.opencode/skills/route/SKILL.md` | Supported | Local skill loader and interactive prompts |
 | **Codex** | `.agents/skills/route/SKILL.md` | Supported | Universal Agentic Skill schema |
+| **Agents User Library** | `~/.agents/skills` / `~/.agents/plugins` | Discovered | Cross-tool user library and AGENTS.md ecosystem |
 | [**HOL Guard**](https://github.com/hashgraph-online/hol-guard) | Local agent harness command protection | Supported | [Pre-action safety extension (`command.routed`)](#agent-harness-safety-with-hol-guard) |
 
 ---

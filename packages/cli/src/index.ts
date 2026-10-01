@@ -15,7 +15,7 @@ import { runOllamaCommand } from './commands/ollama.js';
 import { runHermesCommand } from './commands/hermes.js';
 import { runUpdateCommand } from './commands/update.js';
 import { runTuneCommand } from './commands/tune.js';
-export const VERSION = '1.6.95';
+export const VERSION = '1.6.96';
 export async function main(args: string[]): Promise<void> {
     const command = args[0];
     if (!command || command === 'help' || command === '--help' || command === '-h') {
@@ -60,6 +60,7 @@ export async function main(args: string[]): Promise<void> {
             const flags = args.slice(1);
             let workspace: string | undefined;
             let json = false;
+            let prune = true;
             for (let i = 0; i < flags.length; i++) {
                 if (flags[i] === '--workspace' && flags[i + 1]) {
                     workspace = flags[++i];
@@ -67,8 +68,11 @@ export async function main(args: string[]): Promise<void> {
                 else if (flags[i] === '--json') {
                     json = true;
                 }
+                else if (flags[i] === '--no-prune') {
+                    prune = false;
+                }
             }
-            runScan({ workspace, json });
+            runScan({ workspace, json, prune });
             break;
         }
         case 'skills': {
@@ -294,8 +298,9 @@ Options:
   --grid-search       Run parameter grid search from benchmark (for 'benchmark')
   --json              Output results in JSON format
   --workspace <path>  Specify a custom workspace path for 'scan'
+  --no-prune          Do not remove missing skills from index during scan
   --filter <term>     Filter skills by name or keyword
-  --host <id>         Filter skills by host (antigravity, claude-code, cursor, opencode, etc.)
+  --host <id>         Filter skills by host (antigravity, claude-code, cursor, opencode, agents, etc.)
 
 Examples:
   routed route "debug memory leaks in node"

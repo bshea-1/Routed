@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import { detectEnvironments, SkillScanner, RoutedDatabase, ensureDataDirectories } from '../../../core/dist/index.js';
 export function runScan(options = {}) {
     const startTime = performance.now();
@@ -25,7 +26,17 @@ export function runScan(options = {}) {
             unchangedCount++;
         }
     }
-    const removedCount = db.removeMissingSkills(validPaths);
+    const scannedRoots = [];
+    for (const env of environments) {
+        if (!env.detected && env.skillPaths.length === 0)
+            continue;
+        for (const sp of env.skillPaths) {
+            if (fs.existsSync(sp)) {
+                scannedRoots.push(sp);
+            }
+        }
+    }
+    const removedCount = options.prune !== false ? db.removeMissingSkills(validPaths, scannedRoots) : 0;
     db.saveEnvironments(environments);
     db.setMeta('last_scan_time', new Date().toISOString());
     const scanDurationMs = Math.round(performance.now() - startTime);

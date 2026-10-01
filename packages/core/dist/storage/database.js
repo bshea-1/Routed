@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 import { createRequire } from 'node:module';
 import { ensureDataDirectories } from '../config/paths.js';
 const require = createRequire(import.meta.url);
@@ -266,22 +267,46 @@ export class RoutedDatabase {
         }
         return true;
     }
-    removeMissingSkills(validPaths) {
+    removeMissingSkills(validPaths, scannedRoots) {
         let removed = 0;
+        const normalizedRoots = scannedRoots && scannedRoots.length > 0
+            ? scannedRoots.map((r) => path.resolve(r))
+            : undefined;
+        const shouldPrune = (filePath) => {
+            const resolvedFile = path.resolve(filePath);
+            if (validPaths.has(filePath) || validPaths.has(resolvedFile)) {
+                return false;
+            }
+            if (!fs.existsSync(filePath) && !fs.existsSync(resolvedFile)) {
+                return true;
+            }
+            if (normalizedRoots && normalizedRoots.length > 0) {
+                return normalizedRoots.some((root) => {
+                    const rel = path.relative(root, resolvedFile);
+                    return !rel.startsWith('..') && !path.isAbsolute(rel);
+                });
+            }
+            return false;
+        };
         if (this.db) {
             const all = this.getAllSkills();
             const deleteStmt = this.db.prepare(`DELETE FROM skills WHERE path = ?`);
+            const deleteEmbStmt = this.db.prepare(`DELETE FROM embeddings WHERE skill_id = ?`);
             for (const skill of all) {
-                if (!validPaths.has(skill.path)) {
+                if (shouldPrune(skill.path)) {
                     deleteStmt.run(skill.path);
+                    deleteEmbStmt.run(skill.id);
                     removed++;
                 }
             }
         }
         else {
-            for (const p of Object.keys(this.jsonStore.skills)) {
-                if (!validPaths.has(p)) {
+            for (const [p, skill] of Object.entries(this.jsonStore.skills)) {
+                if (shouldPrune(p)) {
                     delete this.jsonStore.skills[p];
+                    if (skill && skill.id) {
+                        delete this.jsonStore.embeddings[skill.id];
+                    }
                     removed++;
                 }
             }

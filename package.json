@@ -1,6 +1,6 @@
 {
   "name": "routed",
-  "version": "1.6.95",
+  "version": "1.6.96",
   "description": "Universal local router for Agent Skills across AI coding environments",
   "main": "packages/core/dist/index.js",
   "type": "module",
@@ -19,6 +19,7 @@
   ],
   "scripts": {
     "build": "tsc -b",
+    "test": "node scripts/test-discovery.mjs",
     "benchmark": "node packages/cli/bin/routed.js benchmark",
     "setup": "node packages/cli/bin/routed.js setup",
     "routed": "node packages/cli/bin/routed.js",

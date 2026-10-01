@@ -14,7 +14,7 @@ export class SkillScanner {
     private visitedPaths = new Set<string>();
     public scanEnvironments(environments: HostEnvironment[], options: ScannerOptions = {}): SkillMetadata[] {
         const skills: SkillMetadata[] = [];
-        const maxDepth = options.maxDepth ?? 5;
+        const maxDepth = options.maxDepth ?? 8;
         this.visitedPaths.clear();
         for (const env of environments) {
             if (!env.detected && env.skillPaths.length === 0)
@@ -65,16 +65,29 @@ export class SkillScanner {
         const results: SkillMetadata[] = [];
         try {
             const entries = fs.readdirSync(dirPath, { withFileTypes: true });
-            const allowedDotDirs = ['.agents', '.gemini', '.claude', '.cursor', '.cline', '.opencode', '.hermes', '.gemini-cli'];
+            const allowedDotDirs = ['.agents', '.gemini', '.claude', '.cursor', '.cline', '.opencode', '.hermes', '.gemini-cli', '.codex', '.system'];
+            const ignoredDirs = new Set(['node_modules', 'dist', 'build', '__pycache__', 'target', '.git']);
             for (const entry of entries) {
                 if (entry.name.startsWith('.') && !allowedDotDirs.includes(entry.name)) {
                     continue;
                 }
-                if (entry.name === 'node_modules' || entry.name === 'dist' || entry.name === 'build') {
+                if (ignoredDirs.has(entry.name)) {
                     continue;
                 }
                 const fullPath = path.join(dirPath, entry.name);
-                if (entry.isFile()) {
+                let isDirectory = entry.isDirectory();
+                let isFile = entry.isFile();
+                if (entry.isSymbolicLink()) {
+                    try {
+                        const stat = fs.statSync(fullPath);
+                        isDirectory = stat.isDirectory();
+                        isFile = stat.isFile();
+                    }
+                    catch {
+                        continue;
+                    }
+                }
+                if (isFile) {
                     if (entry.name.toLowerCase() === 'skill.md') {
                         const skill = parseSkillFile(fullPath, host);
                         if (skill && skill.name.toLowerCase() !== 'route') {
@@ -82,20 +95,11 @@ export class SkillScanner {
                         }
                     }
                 }
-                else if (entry.isDirectory() || entry.isSymbolicLink()) {
+                else if (isDirectory) {
                     if (entry.name.toLowerCase() === 'route') {
                         continue;
                     }
-                    const candidateSkillFile = path.join(fullPath, 'SKILL.md');
-                    if (fs.existsSync(candidateSkillFile)) {
-                        const skill = parseSkillFile(candidateSkillFile, host);
-                        if (skill && skill.name.toLowerCase() !== 'route') {
-                            results.push(skill);
-                        }
-                    }
-                    else {
-                        results.push(...this.crawlDirectory(fullPath, host, depth + 1, maxDepth));
-                    }
+                    results.push(...this.crawlDirectory(fullPath, host, depth + 1, maxDepth));
                 }
             }
         }
