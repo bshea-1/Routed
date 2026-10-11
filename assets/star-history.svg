@@ -95,27 +95,27 @@
         <text x="65.0" y="332" text-anchor="middle" class="tick-label">Sep 4</text>
         
 
-        <line x1="240.0" y1="310" x2="240.0" y2="316" stroke="var(--grid-line)" />
-        <text x="240.0" y="332" text-anchor="middle" class="tick-label">Sep 13</text>
+        <line x1="227.8" y1="310" x2="227.8" y2="316" stroke="var(--grid-line)" />
+        <text x="227.8" y="332" text-anchor="middle" class="tick-label">Sep 14</text>
         
 
-        <line x1="415.0" y1="310" x2="415.0" y2="316" stroke="var(--grid-line)" />
-        <text x="415.0" y="332" text-anchor="middle" class="tick-label">Sep 22</text>
+        <line x1="390.6" y1="310" x2="390.6" y2="316" stroke="var(--grid-line)" />
+        <text x="390.6" y="332" text-anchor="middle" class="tick-label">Sep 24</text>
         
 
-        <line x1="590.0" y1="310" x2="590.0" y2="316" stroke="var(--grid-line)" />
-        <text x="590.0" y="332" text-anchor="middle" class="tick-label">Oct 1</text>
+        <line x1="553.4" y1="310" x2="553.4" y2="316" stroke="var(--grid-line)" />
+        <text x="553.4" y="332" text-anchor="middle" class="tick-label">Oct 4</text>
         
 
         <line x1="765.0" y1="310" x2="765.0" y2="316" stroke="var(--grid-line)" />
-        <text x="765.0" y="332" text-anchor="middle" class="tick-label">Oct 10</text>
+        <text x="765.0" y="332" text-anchor="middle" class="tick-label">Oct 17</text>
         </g>
 
   <!-- Gradient Area Under Curve -->
-  <path d="M 65.0,310.0 L 84.4,278.8 L 103.9,153.8 L 123.3,112.1 L 142.8,112.1 L 162.2,101.7 L 181.7,101.7 L 201.1,101.7 L 220.6,91.3 L 240.0,91.3 L 259.4,80.8 L 278.9,80.8 L 298.3,80.8 L 317.8,80.8 L 337.2,80.8 L 356.7,80.8 L 376.1,80.8 L 395.6,80.8 L 415.0,80.8 L 434.4,80.8 L 453.9,80.8 L 473.3,80.8 L 492.8,80.8 L 512.2,80.8 L 531.7,80.8 L 551.1,80.8 L 570.6,80.8 L 590.0,70.4 L 609.4,70.4 L 628.9,70.4 L 648.3,70.4 L 667.8,70.4 L 687.2,70.4 L 706.7,70.4 L 726.1,60.0 L 745.6,60.0 L 765.0,60.0 L 765.0,310.0 L 65.0,310.0 Z" class="data-area" />
+  <path d="M 65.0,310.0 L 81.3,278.8 L 97.6,153.8 L 113.8,112.1 L 130.1,112.1 L 146.4,101.7 L 162.7,101.7 L 179.0,101.7 L 195.2,91.3 L 211.5,91.3 L 227.8,80.8 L 244.1,80.8 L 260.3,80.8 L 276.6,80.8 L 292.9,80.8 L 309.2,80.8 L 325.5,80.8 L 341.7,80.8 L 358.0,80.8 L 374.3,80.8 L 390.6,80.8 L 406.9,80.8 L 423.1,80.8 L 439.4,80.8 L 455.7,80.8 L 472.0,80.8 L 488.3,80.8 L 504.5,70.4 L 520.8,70.4 L 537.1,70.4 L 553.4,70.4 L 569.7,70.4 L 585.9,70.4 L 602.2,70.4 L 618.5,60.0 L 634.8,60.0 L 651.0,60.0 L 667.3,60.0 L 683.6,60.0 L 699.9,60.0 L 716.2,60.0 L 732.4,60.0 L 748.7,60.0 L 765.0,60.0 L 765.0,310.0 L 65.0,310.0 Z" class="data-area" />
 
   <!-- Plot Line -->
-  <path d="M 65.0,310.0 L 84.4,278.8 L 103.9,153.8 L 123.3,112.1 L 142.8,112.1 L 162.2,101.7 L 181.7,101.7 L 201.1,101.7 L 220.6,91.3 L 240.0,91.3 L 259.4,80.8 L 278.9,80.8 L 298.3,80.8 L 317.8,80.8 L 337.2,80.8 L 356.7,80.8 L 376.1,80.8 L 395.6,80.8 L 415.0,80.8 L 434.4,80.8 L 453.9,80.8 L 473.3,80.8 L 492.8,80.8 L 512.2,80.8 L 531.7,80.8 L 551.1,80.8 L 570.6,80.8 L 590.0,70.4 L 609.4,70.4 L 628.9,70.4 L 648.3,70.4 L 667.8,70.4 L 687.2,70.4 L 706.7,70.4 L 726.1,60.0 L 745.6,60.0 L 765.0,60.0" class="data-line" />
+  <path d="M 65.0,310.0 L 81.3,278.8 L 97.6,153.8 L 113.8,112.1 L 130.1,112.1 L 146.4,101.7 L 162.7,101.7 L 179.0,101.7 L 195.2,91.3 L 211.5,91.3 L 227.8,80.8 L 244.1,80.8 L 260.3,80.8 L 276.6,80.8 L 292.9,80.8 L 309.2,80.8 L 325.5,80.8 L 341.7,80.8 L 358.0,80.8 L 374.3,80.8 L 390.6,80.8 L 406.9,80.8 L 423.1,80.8 L 439.4,80.8 L 455.7,80.8 L 472.0,80.8 L 488.3,80.8 L 504.5,70.4 L 520.8,70.4 L 537.1,70.4 L 553.4,70.4 L 569.7,70.4 L 585.9,70.4 L 602.2,70.4 L 618.5,60.0 L 634.8,60.0 L 651.0,60.0 L 667.3,60.0 L 683.6,60.0 L 699.9,60.0 L 716.2,60.0 L 732.4,60.0 L 748.7,60.0 L 765.0,60.0" class="data-line" />
 
   <!-- Data Points -->
   <g>
@@ -123,36 +123,36 @@
         <circle cx="65.0" cy="310.0" r="2" class="data-dot-center" />
         
 
-        <circle cx="84.4" cy="278.8" r="4.5" class="data-dot" />
-        <circle cx="84.4" cy="278.8" r="2" class="data-dot-center" />
+        <circle cx="81.3" cy="278.8" r="4.5" class="data-dot" />
+        <circle cx="81.3" cy="278.8" r="2" class="data-dot-center" />
         
 
-        <circle cx="103.9" cy="153.8" r="4.5" class="data-dot" />
-        <circle cx="103.9" cy="153.8" r="2" class="data-dot-center" />
+        <circle cx="97.6" cy="153.8" r="4.5" class="data-dot" />
+        <circle cx="97.6" cy="153.8" r="2" class="data-dot-center" />
         
 
-        <circle cx="123.3" cy="112.1" r="4.5" class="data-dot" />
-        <circle cx="123.3" cy="112.1" r="2" class="data-dot-center" />
+        <circle cx="113.8" cy="112.1" r="4.5" class="data-dot" />
+        <circle cx="113.8" cy="112.1" r="2" class="data-dot-center" />
         
 
-        <circle cx="162.2" cy="101.7" r="4.5" class="data-dot" />
-        <circle cx="162.2" cy="101.7" r="2" class="data-dot-center" />
+        <circle cx="146.4" cy="101.7" r="4.5" class="data-dot" />
+        <circle cx="146.4" cy="101.7" r="2" class="data-dot-center" />
         
 
-        <circle cx="220.6" cy="91.3" r="4.5" class="data-dot" />
-        <circle cx="220.6" cy="91.3" r="2" class="data-dot-center" />
+        <circle cx="195.2" cy="91.3" r="4.5" class="data-dot" />
+        <circle cx="195.2" cy="91.3" r="2" class="data-dot-center" />
         
 
-        <circle cx="259.4" cy="80.8" r="4.5" class="data-dot" />
-        <circle cx="259.4" cy="80.8" r="2" class="data-dot-center" />
+        <circle cx="227.8" cy="80.8" r="4.5" class="data-dot" />
+        <circle cx="227.8" cy="80.8" r="2" class="data-dot-center" />
         
 
-        <circle cx="590.0" cy="70.4" r="4.5" class="data-dot" />
-        <circle cx="590.0" cy="70.4" r="2" class="data-dot-center" />
+        <circle cx="504.5" cy="70.4" r="4.5" class="data-dot" />
+        <circle cx="504.5" cy="70.4" r="2" class="data-dot-center" />
         
 
-        <circle cx="726.1" cy="60.0" r="4.5" class="data-dot" />
-        <circle cx="726.1" cy="60.0" r="2" class="data-dot-center" />
+        <circle cx="618.5" cy="60.0" r="4.5" class="data-dot" />
+        <circle cx="618.5" cy="60.0" r="2" class="data-dot-center" />
         
 
         <circle cx="765.0" cy="60.0" r="4.5" class="data-dot" />
