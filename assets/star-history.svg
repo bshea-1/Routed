@@ -95,27 +95,27 @@
         <text x="65.0" y="332" text-anchor="middle" class="tick-label">Sep 4</text>
         
 
-        <line x1="240.0" y1="310" x2="240.0" y2="316" stroke="var(--grid-line)" />
-        <text x="240.0" y="332" text-anchor="middle" class="tick-label">Sep 20</text>
+        <line x1="232.6" y1="310" x2="232.6" y2="316" stroke="var(--grid-line)" />
+        <text x="232.6" y="332" text-anchor="middle" class="tick-label">Sep 21</text>
         
 
-        <line x1="415.0" y1="310" x2="415.0" y2="316" stroke="var(--grid-line)" />
-        <text x="415.0" y="332" text-anchor="middle" class="tick-label">Oct 6</text>
+        <line x1="400.2" y1="310" x2="400.2" y2="316" stroke="var(--grid-line)" />
+        <text x="400.2" y="332" text-anchor="middle" class="tick-label">Oct 8</text>
         
 
-        <line x1="590.0" y1="310" x2="590.0" y2="316" stroke="var(--grid-line)" />
-        <text x="590.0" y="332" text-anchor="middle" class="tick-label">Oct 22</text>
+        <line x1="567.8" y1="310" x2="567.8" y2="316" stroke="var(--grid-line)" />
+        <text x="567.8" y="332" text-anchor="middle" class="tick-label">Oct 25</text>
         
 
         <line x1="765.0" y1="310" x2="765.0" y2="316" stroke="var(--grid-line)" />
-        <text x="765.0" y="332" text-anchor="middle" class="tick-label">Nov 7</text>
+        <text x="765.0" y="332" text-anchor="middle" class="tick-label">Nov 14</text>
         </g>
 
   <!-- Gradient Area Under Curve -->
-  <path d="M 65.0,310.0 L 75.9,283.2 L 86.9,176.1 L 97.8,140.4 L 108.8,140.4 L 119.7,131.4 L 130.6,131.4 L 141.6,131.4 L 152.5,122.5 L 163.4,122.5 L 174.4,113.6 L 185.3,113.6 L 196.3,113.6 L 207.2,113.6 L 218.1,113.6 L 229.1,113.6 L 240.0,113.6 L 250.9,113.6 L 261.9,113.6 L 272.8,113.6 L 283.8,113.6 L 294.7,113.6 L 305.6,113.6 L 316.6,113.6 L 327.5,113.6 L 338.4,113.6 L 349.4,113.6 L 360.3,104.6 L 371.3,104.6 L 382.2,104.6 L 393.1,104.6 L 404.1,104.6 L 415.0,104.6 L 425.9,104.6 L 436.9,95.7 L 447.8,95.7 L 458.8,95.7 L 469.7,95.7 L 480.6,95.7 L 491.6,95.7 L 502.5,95.7 L 513.4,95.7 L 524.4,95.7 L 535.3,95.7 L 546.3,95.7 L 557.2,95.7 L 568.1,77.9 L 579.1,68.9 L 590.0,68.9 L 600.9,68.9 L 611.9,68.9 L 622.8,68.9 L 633.8,68.9 L 644.7,68.9 L 655.6,68.9 L 666.6,68.9 L 677.5,68.9 L 688.4,68.9 L 699.4,68.9 L 710.3,60.0 L 721.3,60.0 L 732.2,60.0 L 743.1,60.0 L 754.1,60.0 L 765.0,60.0 L 765.0,310.0 L 65.0,310.0 Z" class="data-area" />
+  <path d="M 65.0,310.0 L 74.9,283.2 L 84.7,176.1 L 94.6,140.4 L 104.4,140.4 L 114.3,131.4 L 124.2,131.4 L 134.0,131.4 L 143.9,122.5 L 153.7,122.5 L 163.6,113.6 L 173.5,113.6 L 183.3,113.6 L 193.2,113.6 L 203.0,113.6 L 212.9,113.6 L 222.7,113.6 L 232.6,113.6 L 242.5,113.6 L 252.3,113.6 L 262.2,113.6 L 272.0,113.6 L 281.9,113.6 L 291.8,113.6 L 301.6,113.6 L 311.5,113.6 L 321.3,113.6 L 331.2,104.6 L 341.1,104.6 L 350.9,104.6 L 360.8,104.6 L 370.6,104.6 L 380.5,104.6 L 390.4,104.6 L 400.2,95.7 L 410.1,95.7 L 419.9,95.7 L 429.8,95.7 L 439.6,95.7 L 449.5,95.7 L 459.4,95.7 L 469.2,95.7 L 479.1,95.7 L 488.9,95.7 L 498.8,95.7 L 508.7,95.7 L 518.5,77.9 L 528.4,68.9 L 538.2,68.9 L 548.1,68.9 L 558.0,68.9 L 567.8,68.9 L 577.7,68.9 L 587.5,68.9 L 597.4,68.9 L 607.3,68.9 L 617.1,68.9 L 627.0,68.9 L 636.8,68.9 L 646.7,60.0 L 656.5,60.0 L 666.4,60.0 L 676.3,60.0 L 686.1,60.0 L 696.0,60.0 L 705.8,60.0 L 715.7,60.0 L 725.6,60.0 L 735.4,60.0 L 745.3,60.0 L 755.1,60.0 L 765.0,60.0 L 765.0,310.0 L 65.0,310.0 Z" class="data-area" />
 
   <!-- Plot Line -->
-  <path d="M 65.0,310.0 L 75.9,283.2 L 86.9,176.1 L 97.8,140.4 L 108.8,140.4 L 119.7,131.4 L 130.6,131.4 L 141.6,131.4 L 152.5,122.5 L 163.4,122.5 L 174.4,113.6 L 185.3,113.6 L 196.3,113.6 L 207.2,113.6 L 218.1,113.6 L 229.1,113.6 L 240.0,113.6 L 250.9,113.6 L 261.9,113.6 L 272.8,113.6 L 283.8,113.6 L 294.7,113.6 L 305.6,113.6 L 316.6,113.6 L 327.5,113.6 L 338.4,113.6 L 349.4,113.6 L 360.3,104.6 L 371.3,104.6 L 382.2,104.6 L 393.1,104.6 L 404.1,104.6 L 415.0,104.6 L 425.9,104.6 L 436.9,95.7 L 447.8,95.7 L 458.8,95.7 L 469.7,95.7 L 480.6,95.7 L 491.6,95.7 L 502.5,95.7 L 513.4,95.7 L 524.4,95.7 L 535.3,95.7 L 546.3,95.7 L 557.2,95.7 L 568.1,77.9 L 579.1,68.9 L 590.0,68.9 L 600.9,68.9 L 611.9,68.9 L 622.8,68.9 L 633.8,68.9 L 644.7,68.9 L 655.6,68.9 L 666.6,68.9 L 677.5,68.9 L 688.4,68.9 L 699.4,68.9 L 710.3,60.0 L 721.3,60.0 L 732.2,60.0 L 743.1,60.0 L 754.1,60.0 L 765.0,60.0" class="data-line" />
+  <path d="M 65.0,310.0 L 74.9,283.2 L 84.7,176.1 L 94.6,140.4 L 104.4,140.4 L 114.3,131.4 L 124.2,131.4 L 134.0,131.4 L 143.9,122.5 L 153.7,122.5 L 163.6,113.6 L 173.5,113.6 L 183.3,113.6 L 193.2,113.6 L 203.0,113.6 L 212.9,113.6 L 222.7,113.6 L 232.6,113.6 L 242.5,113.6 L 252.3,113.6 L 262.2,113.6 L 272.0,113.6 L 281.9,113.6 L 291.8,113.6 L 301.6,113.6 L 311.5,113.6 L 321.3,113.6 L 331.2,104.6 L 341.1,104.6 L 350.9,104.6 L 360.8,104.6 L 370.6,104.6 L 380.5,104.6 L 390.4,104.6 L 400.2,95.7 L 410.1,95.7 L 419.9,95.7 L 429.8,95.7 L 439.6,95.7 L 449.5,95.7 L 459.4,95.7 L 469.2,95.7 L 479.1,95.7 L 488.9,95.7 L 498.8,95.7 L 508.7,95.7 L 518.5,77.9 L 528.4,68.9 L 538.2,68.9 L 548.1,68.9 L 558.0,68.9 L 567.8,68.9 L 577.7,68.9 L 587.5,68.9 L 597.4,68.9 L 607.3,68.9 L 617.1,68.9 L 627.0,68.9 L 636.8,68.9 L 646.7,60.0 L 656.5,60.0 L 666.4,60.0 L 676.3,60.0 L 686.1,60.0 L 696.0,60.0 L 705.8,60.0 L 715.7,60.0 L 725.6,60.0 L 735.4,60.0 L 745.3,60.0 L 755.1,60.0 L 765.0,60.0" class="data-line" />
 
   <!-- Data Points -->
   <g>
@@ -123,48 +123,48 @@
         <circle cx="65.0" cy="310.0" r="2" class="data-dot-center" />
         
 
-        <circle cx="75.9" cy="283.2" r="4.5" class="data-dot" />
-        <circle cx="75.9" cy="283.2" r="2" class="data-dot-center" />
+        <circle cx="74.9" cy="283.2" r="4.5" class="data-dot" />
+        <circle cx="74.9" cy="283.2" r="2" class="data-dot-center" />
         
 
-        <circle cx="86.9" cy="176.1" r="4.5" class="data-dot" />
-        <circle cx="86.9" cy="176.1" r="2" class="data-dot-center" />
+        <circle cx="84.7" cy="176.1" r="4.5" class="data-dot" />
+        <circle cx="84.7" cy="176.1" r="2" class="data-dot-center" />
         
 
-        <circle cx="97.8" cy="140.4" r="4.5" class="data-dot" />
-        <circle cx="97.8" cy="140.4" r="2" class="data-dot-center" />
+        <circle cx="94.6" cy="140.4" r="4.5" class="data-dot" />
+        <circle cx="94.6" cy="140.4" r="2" class="data-dot-center" />
         
 
-        <circle cx="119.7" cy="131.4" r="4.5" class="data-dot" />
-        <circle cx="119.7" cy="131.4" r="2" class="data-dot-center" />
+        <circle cx="114.3" cy="131.4" r="4.5" class="data-dot" />
+        <circle cx="114.3" cy="131.4" r="2" class="data-dot-center" />
         
 
-        <circle cx="152.5" cy="122.5" r="4.5" class="data-dot" />
-        <circle cx="152.5" cy="122.5" r="2" class="data-dot-center" />
+        <circle cx="143.9" cy="122.5" r="4.5" class="data-dot" />
+        <circle cx="143.9" cy="122.5" r="2" class="data-dot-center" />
         
 
-        <circle cx="174.4" cy="113.6" r="4.5" class="data-dot" />
-        <circle cx="174.4" cy="113.6" r="2" class="data-dot-center" />
+        <circle cx="163.6" cy="113.6" r="4.5" class="data-dot" />
+        <circle cx="163.6" cy="113.6" r="2" class="data-dot-center" />
         
 
-        <circle cx="360.3" cy="104.6" r="4.5" class="data-dot" />
-        <circle cx="360.3" cy="104.6" r="2" class="data-dot-center" />
+        <circle cx="331.2" cy="104.6" r="4.5" class="data-dot" />
+        <circle cx="331.2" cy="104.6" r="2" class="data-dot-center" />
         
 
-        <circle cx="436.9" cy="95.7" r="4.5" class="data-dot" />
-        <circle cx="436.9" cy="95.7" r="2" class="data-dot-center" />
+        <circle cx="400.2" cy="95.7" r="4.5" class="data-dot" />
+        <circle cx="400.2" cy="95.7" r="2" class="data-dot-center" />
         
 
-        <circle cx="568.1" cy="77.9" r="4.5" class="data-dot" />
-        <circle cx="568.1" cy="77.9" r="2" class="data-dot-center" />
+        <circle cx="518.5" cy="77.9" r="4.5" class="data-dot" />
+        <circle cx="518.5" cy="77.9" r="2" class="data-dot-center" />
         
 
-        <circle cx="579.1" cy="68.9" r="4.5" class="data-dot" />
-        <circle cx="579.1" cy="68.9" r="2" class="data-dot-center" />
+        <circle cx="528.4" cy="68.9" r="4.5" class="data-dot" />
+        <circle cx="528.4" cy="68.9" r="2" class="data-dot-center" />
         
 
-        <circle cx="710.3" cy="60.0" r="4.5" class="data-dot" />
-        <circle cx="710.3" cy="60.0" r="2" class="data-dot-center" />
+        <circle cx="646.7" cy="60.0" r="4.5" class="data-dot" />
+        <circle cx="646.7" cy="60.0" r="2" class="data-dot-center" />
         
 
         <circle cx="765.0" cy="60.0" r="4.5" class="data-dot" />
